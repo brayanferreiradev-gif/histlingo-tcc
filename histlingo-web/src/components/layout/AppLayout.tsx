@@ -3,6 +3,7 @@ import { Sidebar } from "./Sidebar"
 import { RightPanel } from "./RightPanel"
 import { ReactNode } from "react"
 import { useLocation } from "wouter"
+import { AnimatePresence, motion } from "framer-motion"
 
 const PAGE_TITLES: Record<string, string> = {
   '/': 'Jornada',
@@ -37,7 +38,17 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
         {/* Scrollable page content */}
         <div className="flex-1 px-4 lg:px-10 pt-5 pb-24 lg:pb-10 overflow-y-auto no-scrollbar">
-          {children}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={location}
+              initial={{ opacity: 0, y: 18, scale: 0.985 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.28, ease: [0.2, 0.9, 0.3, 1] }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 

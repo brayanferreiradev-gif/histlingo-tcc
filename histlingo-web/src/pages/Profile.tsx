@@ -1,10 +1,13 @@
+import { Avatar, AVATAR_VALUES } from "../components/Avatar"
+import { PixelChar, CHAR_META, type CharKey } from "../components/PixelChar"
+import { sfx } from "../lib/sfx"
+import { MedalsSection } from "../components/MedalsSection"
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { Edit2, Check, X, Flame, Star, Trophy, Calendar } from "lucide-react"
 import { useAuth } from "../lib/AuthContext"
 import { users } from "../lib/api"
 
-const AVATAR_OPTIONS = ['🦊', '🐺', '🦅', '🐉', '🦁', '🐻', '🦋', '🐬', '🦄', '🐱', '🐸', '🦜', '🐧', '🦞', '🐮', '🐺', '🏹', '⚔️', '🛡️', '🎭']
 
 const LEAGUE_INFO: Record<string, { icon: string; color: string; next: string; nextXP: number }> = {
   'Bronze':   { icon: '🥉', color: 'text-amber-600', next: 'Prata', nextXP: 500 },
@@ -27,7 +30,7 @@ export function Profile() {
   const [editing, setEditing] = useState(false)
   const [pickingAvatar, setPickingAvatar] = useState(false)
   const [username, setUsername] = useState(user?.username || '')
-  const [avatarEmoji, setAvatarEmoji] = useState(user?.avatarEmoji || '🦊')
+  const [avatarEmoji, setAvatarEmoji] = useState(user?.avatarEmoji || 'px:1')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -59,7 +62,7 @@ export function Profile() {
 
   const handleCancel = () => {
     setUsername(localUser.username)
-    setAvatarEmoji(localUser.avatarEmoji || '🦊')
+    setAvatarEmoji(localUser.avatarEmoji || 'px:1')
     setEditing(false)
     setPickingAvatar(false)
     setError(null)
@@ -82,8 +85,8 @@ export function Profile() {
           {/* Avatar */}
           <div className="relative">
             <button onClick={() => { setEditing(true); setPickingAvatar(true) }}
-              className="text-7xl w-24 h-24 rounded-full bg-[#0F1C29] border-4 border-(--color-primary)/40 flex items-center justify-center hover:border-(--color-primary) hover:shadow-[0_0_20px_rgba(0,214,100,0.4)] transition-all relative shadow-[0_0_12px_rgba(0,214,100,0.2)]">
-              {avatarEmoji}
+              className="w-24 h-24 rounded-full border-4 border-(--color-primary)/40 hover:border-(--color-primary) hover:shadow-[0_0_20px_rgba(0,214,100,0.4)] transition-all relative shadow-[0_0_12px_rgba(0,214,100,0.2)] overflow-hidden">
+              <Avatar value={avatarEmoji} size={88} />
               {editing && <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center"><Edit2 size={20} className="text-white" /></div>}
             </button>
           </div>
@@ -125,13 +128,21 @@ export function Profile() {
         {pickingAvatar && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mb-6">
             <p className="text-gray-400 font-black text-sm uppercase tracking-wider mb-3">Escolha seu avatar</p>
-            <div className="grid grid-cols-5 gap-2">
-              {AVATAR_OPTIONS.map(emoji => (
-                <button key={emoji} onClick={() => { setAvatarEmoji(emoji); setPickingAvatar(false) }}
-                  className={`text-3xl p-3 rounded-2xl border-2 transition-all hover:scale-110 ${avatarEmoji === emoji ? 'border-(--color-primary) bg-(--color-primary)/20' : 'border-(--color-border) bg-[#1A2633]'}`}>
-                  {emoji}
-                </button>
-              ))}
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+              {AVATAR_VALUES.map((v, i) => {
+                const meta = CHAR_META[(i + 1) as CharKey]
+                const selected = avatarEmoji === v
+                return (
+                  <button key={v} onClick={() => { setAvatarEmoji(v); setPickingAvatar(false); sfx.pick() }}
+                    className={`flex flex-col items-center gap-1 p-2 rounded-2xl border-2 transition-all hover:-translate-y-1 ${selected ? 'border-(--color-primary) bg-(--color-primary)/20' : 'border-(--color-border) bg-[#1A2633]'}`}>
+                    <div className="flex items-end justify-center h-[96px] w-full rounded-xl" style={{ background: meta.bg }}>
+                      <PixelChar char={i + 1} pose={selected ? 'cheer' : 'idle'} scale={3} />
+                    </div>
+                    <span className="text-white font-black text-xs">{meta.name}</span>
+                    <span className="text-gray-400 font-bold text-[10px] uppercase tracking-wide">{meta.era}</span>
+                  </button>
+                )
+              })}
             </div>
           </motion.div>
         )}
@@ -170,19 +181,7 @@ export function Profile() {
         ))}
       </div>
 
-      {/* Achievement placeholder */}
-      <div className="bg-(--color-card) border-2 border-(--color-border) rounded-[2rem] p-6">
-        <h3 className="text-xl font-black text-white mb-4">Conquistas</h3>
-        <div className="flex gap-3 flex-wrap">
-          {localUser.xpTotal >= 10 && <span className="text-3xl" title="Primeiro XP">⭐</span>}
-          {localUser.streakCount >= 3 && <span className="text-3xl" title="3 dias seguidos">🔥</span>}
-          {localUser.xpTotal >= 100 && <span className="text-3xl" title="100 XP">💯</span>}
-          {localUser.xpTotal >= 500 && <span className="text-3xl" title="500 XP - Liga Prata">🥈</span>}
-          {localUser.xpTotal >= 2000 && <span className="text-3xl" title="2000 XP - Liga Ouro">🥇</span>}
-          {localUser.level >= 5 && <span className="text-3xl" title="Nível 5">🏆</span>}
-          {localUser.xpTotal === 0 && <p className="text-gray-500 font-bold text-sm">Complete lições para ganhar conquistas!</p>}
-        </div>
-      </div>
+      <MedalsSection />
     </div>
   )
 }

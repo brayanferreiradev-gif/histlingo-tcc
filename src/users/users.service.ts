@@ -124,6 +124,12 @@ export class UsersService {
       [userId, challengeId]
     );
 
+    // registra a resposta para as estatísticas por assunto (medalhas)
+    await this.db.run(
+      'INSERT INTO answers (id, user_id, challenge_id, answer_provided, is_correct, created_at) VALUES (?, ?, ?, ?, ?, NOW())',
+      [crypto.randomUUID(), userId, challengeId, '', quality >= 4 ? 1 : 0]
+    );
+
     const srsData = this.srs.calculateNextReview(existingReview ? {
       easeFactor: existingReview.ease_factor,
       interval: existingReview.interval,
@@ -151,6 +157,31 @@ export class UsersService {
     await this.gamification.addXP(userId, xpGain);
 
     return { xpGain, nextReviewDate: srsData.nextReviewDate };
+  }
+
+  /** Acertos por assunto (módulo), usados para as medalhas 3D. */
+  async getTopicStats(userId: string) {
+    const rows = await this.db.query<{
+      moduleId: string; moduleOrder: number; title: string; total: number; correct: number;
+    }>(
+      `SELECT m.id AS moduleId, m.\`order\` AS moduleOrder, m.title AS title,
+              COUNT(*) AS total, COALESCE(SUM(a.is_correct), 0) AS correct
+         FROM answers a
+         JOIN challenges c ON c.id = a.challenge_id
+         JOIN lessons l ON l.id = c.lesson_id
+         JOIN modules m ON m.id = l.module_id
+        WHERE a.user_id = ?
+        GROUP BY m.id, m.\`order\`, m.title
+        ORDER BY m.\`order\``,
+      [userId]
+    );
+    return rows.map((r) => ({
+      moduleId: r.moduleId,
+      order: Number(r.moduleOrder),
+      title: r.title,
+      total: Number(r.total),
+      correct: Number(r.correct),
+    }));
   }
 
   private getLeague(xp: number): string {

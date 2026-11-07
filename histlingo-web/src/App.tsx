@@ -8,15 +8,16 @@ import { Leaderboard } from "./pages/Leaderboard"
 import { Profile } from "./pages/Profile"
 import { Wiki } from "./pages/Wiki"
 import { motion } from "framer-motion"
+import { PixelChar } from "./components/PixelChar"
 
 function ServerDownScreen() {
   return (
     <div className="fixed inset-0 bg-[#060C12] flex flex-col items-center justify-center p-8 text-center gap-6">
       <motion.div
-        animate={{ rotate: [0, 10, -10, 0] }}
+        animate={{ rotate: [0, 6, -6, 0] }}
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-        className="text-7xl select-none">
-        ⚙️
+        className="select-none">
+        <PixelChar char={4} pose="sad" scale={5} />
       </motion.div>
       <div>
         <h2 className="text-3xl font-black text-white mb-2">Servidor em manutenção</h2>
@@ -45,7 +46,7 @@ function AppRoutes() {
   if (isLoading) {
     return (
       <div className="fixed inset-0 bg-[#0A1118] flex items-center justify-center">
-        <div className="text-6xl animate-bounce">🏹</div>
+        <motion.div animate={{ y: [0, -26, 0] }} transition={{ repeat: Infinity, duration: 0.7, ease: "easeOut" }}><PixelChar char={1} pose="jump" scale={4} animate={false} /></motion.div>
       </div>
     )
   }

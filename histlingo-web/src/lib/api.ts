@@ -80,6 +80,7 @@ export const content = {
 export const users = {
   getLeaderboard: () => request<LeaderboardEntry[]>('/users/leaderboard'),
   getProgress: () => request<string[]>('/users/progress'),
+  getTopicStats: () => request<TopicStat[]>('/users/topic-stats'),
   updateProfile: (dto: { username?: string; avatarEmoji?: string }) =>
     request<User>('/users/profile', { method: 'PATCH', body: JSON.stringify(dto) }),
   completeLesson: (userId: string, lessonId: string, wrongCount = 0) =>
@@ -147,4 +148,12 @@ export interface Challenge {
   correctAnswer: string;
   explanation: string | null;
   difficultyWeight: number;
+}
+
+export interface TopicStat {
+  moduleId: string;
+  order: number;
+  title: string;
+  total: number;
+  correct: number;
 }

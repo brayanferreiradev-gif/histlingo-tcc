@@ -5,16 +5,17 @@ import { useAuth } from "../lib/AuthContext"
 import { auth } from "../lib/api"
 import { useSearch } from "wouter"
 import KineticGrid from "../components/ui/kinetic-grid"
+import { PixelChar } from "../components/PixelChar"
+import { sfx } from "../lib/sfx"
 
 type Screen = 'landing' | 'register' | 'login' | 'forgot' | 'reset'
 
 const FLOATING_ICONS = [
-  { emoji: '🏹', x: '8%',  y: '12%', delay: 0,   dur: 5.0 },
-  { emoji: '⚔️', x: '85%', y: '18%', delay: 1.0, dur: 6.0 },
-  { emoji: '👑', x: '78%', y: '72%', delay: 2.0, dur: 4.5 },
-  { emoji: '⛵', x: '12%', y: '78%', delay: 0.5, dur: 5.5 },
-  { emoji: '📜', x: '48%', y: '6%',  delay: 1.5, dur: 4.0 },
-  { emoji: '🏛️', x: '92%', y: '46%', delay: 0.8, dur: 6.5 },
+  { char: 1, x: '6%',  y: '12%', delay: 0,   dur: 5.0 },
+  { char: 2, x: '84%', y: '16%', delay: 1.0, dur: 6.0 },
+  { char: 3, x: '78%', y: '70%', delay: 2.0, dur: 4.5 },
+  { char: 4, x: '10%', y: '72%', delay: 0.5, dur: 5.5 },
+  { char: 5, x: '46%', y: '4%',  delay: 1.5, dur: 4.0 },
 ]
 
 const inputCls = "w-full bg-[#070E18] border-2 border-[#1A2B3C] px-5 py-4 rounded-2xl text-base font-bold text-white outline-none focus:border-(--color-primary) focus:shadow-[0_0_0_3px_rgba(0,214,100,0.15)] transition-all placeholder:text-gray-600 shadow-inner"
@@ -87,9 +88,9 @@ export function Auth() {
         <motion.div key={i}
           animate={{ y: [0, -18, 0], rotate: [0, 4, -4, 0] }}
           transition={{ duration: item.dur, repeat: Infinity, delay: item.delay, ease: "easeInOut" }}
-          className="absolute text-5xl opacity-[0.07] pointer-events-none select-none"
+          className="absolute opacity-[0.16] pointer-events-none select-none"
           style={{ left: item.x, top: item.y }}>
-          {item.emoji}
+          <PixelChar char={item.char} scale={3} />
         </motion.div>
       ))}
 
@@ -102,12 +103,20 @@ export function Auth() {
             transition={{ duration: 0.4 }}
             className="flex flex-col items-center text-center px-6 w-full max-w-xs sm:max-w-sm relative z-10">
 
-            <motion.div
-              animate={{ y: [0, -14, 0] }}
-              transition={{ repeat: Infinity, duration: 4.2, ease: "easeInOut" }}
-              className="text-[7rem] sm:text-[8rem] mb-3 leading-none select-none drop-shadow-2xl">
-              🏹
-            </motion.div>
+            <div className="flex items-end justify-center gap-0 sm:gap-1 mb-4 select-none">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <motion.div key={n}
+                  initial={{ y: -60, opacity: 0 }}
+                  animate={{ y: [0, -22, 0], opacity: 1 }}
+                  transition={{
+                    y: { repeat: Infinity, duration: 1.6, delay: 0.5 + n * 0.18, ease: "easeOut", repeatDelay: 1.4 },
+                    opacity: { delay: n * 0.1 },
+                  }}
+                  onAnimationStart={() => { if (n === 3) sfx.land() }}>
+                  <PixelChar char={n} pose="idle" scale={3} />
+                </motion.div>
+              ))}
+            </div>
 
             <h1 className="font-black text-white leading-none tracking-tighter mb-1">
               <span className="text-5xl sm:text-6xl">Hist</span>

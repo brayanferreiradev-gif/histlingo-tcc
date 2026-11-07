@@ -3,6 +3,7 @@ import { Link } from "wouter"
 import { Flame, Star, Trophy } from "lucide-react"
 import { users, LeaderboardEntry } from "../../lib/api"
 import { useAuth } from "../../lib/AuthContext"
+import { Avatar } from "../Avatar"
 
 function getLeague(xp: number): string {
   if (xp >= 10000) return 'Mestre'
@@ -38,7 +39,7 @@ export function RightPanel() {
       {/* User stats */}
       <div className="bg-(--color-card) border-2 border-(--color-border) rounded-3xl p-5 shadow-neo-card">
         <div className="flex items-center gap-3 mb-4">
-          <span className="text-4xl leading-none">{user.avatarEmoji || '🦊'}</span>
+          <Avatar value={user.avatarEmoji} size={52} />
           <div className="flex-1 min-w-0">
             <p className="font-black text-white truncate">{user.username}</p>
             <p className="text-xs text-gray-400 font-bold">Nível {user.level} · {LEAGUE_ICONS[league]} {league}</p>
@@ -96,7 +97,7 @@ export function RightPanel() {
             return (
               <div key={entry.id} className={`flex items-center gap-2.5 px-2 py-2 rounded-2xl ${isMe ? 'bg-(--color-primary)/10 border border-(--color-primary)/20' : ''}`}>
                 <span className="text-base w-6 text-center shrink-0">{i < 3 ? medals[i] : `${i + 1}`}</span>
-                <span className="text-xl shrink-0">{entry.avatarEmoji}</span>
+                <Avatar value={entry.avatarEmoji} size={32} />
                 <div className="flex-1 min-w-0">
                   <p className={`font-black text-xs truncate ${isMe ? 'text-(--color-primary)' : 'text-white'}`}>
                     {entry.username}{isMe ? ' (você)' : ''}

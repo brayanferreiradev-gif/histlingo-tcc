@@ -1,6 +1,9 @@
-import { Flame, Star } from "lucide-react"
+import { Flame, Star, Volume2, VolumeX } from "lucide-react"
+import { useEffect, useState } from "react"
+import { isMuted, onMuteChange, setMuted, sfx } from "../../lib/sfx"
 import { useAuth } from "../../lib/AuthContext"
 import { Link } from "wouter"
+import { Avatar } from "../Avatar"
 
 function getLeague(xp: number): { icon: string; label: string; color: string } {
   if (xp >= 10000) return { icon: '👑', label: 'Mestre', color: 'text-purple-400' }
@@ -12,6 +15,8 @@ function getLeague(xp: number): { icon: string; label: string; color: string } {
 
 export function HeaderStats() {
   const { user } = useAuth()
+  const [muted, setM] = useState(isMuted())
+  useEffect(() => onMuteChange(() => setM(isMuted())), [])
 
   if (!user) return null
 
@@ -19,6 +24,15 @@ export function HeaderStats() {
 
   return (
     <div className="flex items-center gap-2 sm:gap-3 select-none">
+      {/* Som */}
+      <button
+        aria-label={muted ? 'Ativar som' : 'Desativar som'}
+        title={muted ? 'Ativar som' : 'Desativar som'}
+        onClick={() => { const next = !muted; setMuted(next); if (!next) sfx.ok() }}
+        className="w-9 h-9 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 transition-colors shrink-0">
+        {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+      </button>
+
       {/* Streak */}
       <Link href="/profile" className="flex items-center gap-1.5 bg-orange-900/30 border border-orange-700/40 px-2.5 py-1.5 rounded-xl transition-all hover:shadow-[0_0_12px_rgba(249,115,22,0.3)] group">
         <Flame size={20} fill="#FF8C00" color="#FF8C00" className="group-hover:scale-110 transition-transform shrink-0" />
@@ -38,8 +52,8 @@ export function HeaderStats() {
       </Link>
 
       {/* Avatar */}
-      <Link href="/profile" className="text-xl w-9 h-9 rounded-full bg-[#0F1C29] border-2 border-(--color-primary)/30 flex items-center justify-center hover:border-(--color-primary) hover:shadow-[0_0_10px_rgba(0,214,100,0.3)] transition-all shrink-0">
-        {user.avatarEmoji}
+      <Link href="/profile" className="rounded-full border-2 border-(--color-primary)/30 hover:border-(--color-primary) hover:shadow-[0_0_10px_rgba(0,214,100,0.3)] transition-all shrink-0 overflow-hidden">
+        <Avatar value={user.avatarEmoji} size={36} />
       </Link>
     </div>
   )

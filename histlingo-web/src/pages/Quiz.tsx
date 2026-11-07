@@ -4,6 +4,11 @@ import { X, Heart, CheckCircle, XCircle, ChevronRight, RotateCcw } from "lucide-
 import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti"
 import { content, users, Lesson, Challenge } from "../lib/api"
+import { PixelChar } from "../components/PixelChar"
+import { QuizCompanion } from "../components/QuizCompanion"
+import { sfx } from "../lib/sfx"
+import { Medal3D, TIER_LABEL, type Tier } from "../components/Medal3D"
+import { toMedals } from "../components/MedalsSection"
 import { useAuth } from "../lib/AuthContext"
 
 type BlockType = 'THEORY' | 'WHO_AM_I' | 'WORKS_AND_RELICS' | 'TIMELINE' | 'DECISION_SCENARIO'
@@ -20,7 +25,6 @@ interface LessonBlock {
 
 // ── Module characters ──────────────────────────────────────────────────────
 interface Character {
-  emoji: string
   name: string
   role: string
   colorClass: string
@@ -31,36 +35,38 @@ interface Character {
 
 const MODULE_CHARACTERS: Record<number, Character> = {
   1: {
-    emoji: '🪶', name: 'Tupã', role: 'Guia dos Povos Originários',
+    name: 'Cauã', role: 'Guia dos Povos Originários',
     colorClass: 'text-emerald-400', bgClass: 'bg-emerald-900/30 border-emerald-600/40',
     correctMsg: 'Os espíritos ancestrais te guiam, guerreiro!',
     wrongMsg: 'A terra tem muitos saberes. Tente novamente!',
   },
   2: {
-    emoji: '⚓', name: 'Navegador', role: 'Explorador Colonial',
+    name: 'Capitão Duarte', role: 'Explorador Colonial',
     colorClass: 'text-sky-400', bgClass: 'bg-sky-900/30 border-sky-600/40',
     correctMsg: 'Ventos favoráveis! Você está no caminho certo.',
     wrongMsg: 'O oceano é traiçoeiro. Mas todo erro ensina.',
   },
   3: {
-    emoji: '👑', name: 'D. Pedro', role: 'Voz do Império',
+    name: 'D. Pedro', role: 'Voz do Império',
     colorClass: 'text-yellow-400', bgClass: 'bg-yellow-900/30 border-yellow-600/40',
     correctMsg: 'Pela honra do Império! Resposta magnífica.',
     wrongMsg: 'A história é complexa, mas você aprenderá.',
   },
   4: {
-    emoji: '🏛️', name: 'Republicano', role: 'Arauto da República',
+    name: 'Zeca Operário', role: 'Arauto da República',
     colorClass: 'text-orange-400', bgClass: 'bg-orange-900/30 border-orange-600/40',
     correctMsg: 'Ordem e Progresso! Você conhece a história.',
     wrongMsg: 'A República foi construída com erros e acertos.',
   },
   5: {
-    emoji: '✊', name: 'Resistente', role: 'Voz da Democracia',
+    name: 'Luzia', role: 'Voz da Democracia',
     colorClass: 'text-rose-400', bgClass: 'bg-rose-900/30 border-rose-600/40',
     correctMsg: 'Diretas Já! A história do povo está em você.',
     wrongMsg: 'A luta continua. Cada erro nos torna mais fortes.',
   },
 }
+
+const THINK_MSGS = ['Pense com calma, você consegue!', 'Hmm... qual será a resposta certa?', 'Leia com atenção antes de responder!', 'Eu estou torcendo por você!']
 
 function getModuleNumber(lessonId: string): number {
   const m = lessonId.match(/^l-(\d+)-/)
@@ -117,6 +123,7 @@ export function Quiz() {
   const [retriedSet, setRetriedSet] = useState<Set<string>>(new Set())
   const [xpGained, setXpGained] = useState(0)
   const [showVictory, setShowVictory] = useState(false)
+  const [newMedal, setNewMedal] = useState<{ order: number; title: string; tier: Tier; accuracy: number } | null>(null)
 
   const moduleNum = getModuleNumber(lessonId || 'l-1-1')
   const char = MODULE_CHARACTERS[moduleNum] || MODULE_CHARACTERS[1]
@@ -129,6 +136,26 @@ export function Quiz() {
       .finally(() => setLoading(false))
   }, [lessonId])
 
+  // Ao concluir a lição, confere se subiu de nível na medalha do assunto.
+  useEffect(() => {
+    if (!showVictory || !user) return
+    const rank: Record<Tier, number> = { bronze: 1, prata: 2, ouro: 3 }
+    users.getTopicStats().then((stats) => {
+      const m = toMedals(stats).find((x) => x.order === moduleNum)
+      if (!m || !m.tier) return
+      const key = `hl:medal:${user.id}:${m.order}`
+      let prev: Tier | null = null
+      try { prev = localStorage.getItem(key) as Tier | null } catch { /* sem storage */ }
+      if (prev && rank[prev] >= rank[m.tier]) return
+      try { localStorage.setItem(key, m.tier) } catch { /* sem storage */ }
+      setTimeout(() => {
+        setNewMedal({ order: m.order, title: m.title, tier: m.tier!, accuracy: m.accuracy })
+        sfx.medal()
+        confetti({ particleCount: 160, spread: 120, startVelocity: 38, origin: { y: 0.4 }, colors: ['#FFD700', '#FFFFFF', '#00A651', '#FFB800'] })
+      }, 900)
+    }).catch(() => {})
+  }, [showVictory])
+
   // Scroll content to top on each new block
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
@@ -137,8 +164,9 @@ export function Quiz() {
   if (loading) {
     return (
       <div className="fixed inset-0 bg-(--color-background) flex items-center justify-center">
-        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-          className="text-6xl">{char.emoji}</motion.div>
+        <motion.div animate={{ y: [0, -24, 0] }} transition={{ repeat: Infinity, duration: 0.7, ease: "easeOut" }}>
+          <PixelChar char={moduleNum} pose="jump" scale={4} animate={false} />
+        </motion.div>
       </div>
     )
   }
@@ -148,8 +176,12 @@ export function Quiz() {
     const accuracy = total > 0 ? Math.round(((total - wrongCount) / total) * 100) : 100
     return (
       <div className="fixed inset-0 bg-(--color-background) z-[100] flex flex-col items-center justify-center p-8 text-center gap-4">
-        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200 }}
-          className="text-8xl mb-2">🏆</motion.div>
+        <motion.div initial={{ scale: 0, rotate: -12 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 200 }}
+          className="mb-2">
+          <motion.div animate={{ y: [0, -28, 0] }} transition={{ repeat: Infinity, duration: 0.9, ease: "easeOut" }}>
+            <PixelChar char={moduleNum} pose="cheer" scale={6} animate={false} />
+          </motion.div>
+        </motion.div>
         <h1 className="text-4xl font-black text-white tracking-tight">Lição completa!</h1>
         <p className="text-xl font-bold text-(--color-secondary)">+{xpGained} XP conquistados</p>
         {wrongCount > 0 && (
@@ -159,7 +191,7 @@ export function Quiz() {
         )}
         {/* Character congratulation */}
         <div className={`flex items-center gap-3 border rounded-2xl px-5 py-3 mt-1 ${char.bgClass}`}>
-          <span className="text-3xl">{char.emoji}</span>
+          <PixelChar char={moduleNum} pose="idle" scale={2} />
           <div className="text-left">
             <p className={`font-black text-sm ${char.colorClass}`}>{char.name}</p>
             <p className="text-white text-sm font-bold">{accuracy >= 80 ? char.correctMsg : 'Continue praticando!'}</p>
@@ -169,6 +201,27 @@ export function Quiz() {
           <button className="btn-base btn-secondary px-8 py-4" onClick={() => setLocation('/')}>MAPA</button>
           <button className="btn-base btn-primary px-8 py-4" onClick={() => setLocation('/leaderboard')}>VER LIGAS</button>
         </div>
+
+        <AnimatePresence>
+          {newMedal && (
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-3">
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-yellow-300">Nova medalha!</p>
+              <div className="w-[min(78vw,340px)] h-[min(78vw,340px)]">
+                <Medal3D order={newMedal.order} tier={newMedal.tier} intro className="w-full h-full" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight">
+                {TIER_LABEL[newMedal.tier]} em {newMedal.title}
+              </h2>
+              <p className="text-gray-300 font-bold">Você acertou {newMedal.accuracy}% das perguntas deste assunto.</p>
+              <div className="flex gap-3 mt-2">
+                <button className="btn-base btn-outline px-6 py-3" onClick={() => setNewMedal(null)}>CONTINUAR</button>
+                <button className="btn-base btn-secondary px-6 py-3" onClick={() => setLocation('/profile')}>VER NO PERFIL</button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     )
   }
@@ -176,13 +229,13 @@ export function Quiz() {
   if (hearts <= 0) {
     return (
       <div className="fixed inset-0 bg-(--color-background) z-[100] flex flex-col items-center justify-center p-8 text-center gap-6">
-        <div className="text-8xl">💔</div>
+        <motion.div initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 180, damping: 12 }}><PixelChar char={moduleNum} pose="sad" scale={6} /></motion.div>
         <div>
           <h1 className="text-4xl font-black text-white mb-3 tracking-tight">Vidas esgotadas!</h1>
           <p className="text-lg font-bold text-gray-400">Cada erro é um aprendizado. Tente novamente!</p>
         </div>
         <div className={`flex items-center gap-3 border rounded-2xl px-5 py-3 ${char.bgClass}`}>
-          <span className="text-3xl">{char.emoji}</span>
+          <PixelChar char={moduleNum} pose="sad" scale={2} animate={false} />
           <p className={`font-bold text-sm ${char.colorClass}`}>{char.wrongMsg}</p>
         </div>
         <button className="btn-base btn-primary w-full max-w-sm py-5" onClick={() => setLocation('/')}>VOLTAR AO MAPA</button>
@@ -196,8 +249,10 @@ export function Quiz() {
   const progress = ((currentIndex + 1) / blocks.length) * 100
   const isTheory = block.type === 'THEORY'
   const canRetry = !isCorrect && isChecking && !retriedSet.has(block.id)
+  const companionState = isChecking ? (isCorrect ? ('correct' as const) : ('wrong' as const)) : ('think' as const)
+  const thinkMsg = THINK_MSGS[(block.id.length + currentIndex) % THINK_MSGS.length]
 
-  const handleSelect = (option: string) => { if (!isChecking) setSelectedOption(option) }
+  const handleSelect = (option: string) => { if (!isChecking) { setSelectedOption(option); sfx.pick() } }
 
   const handleRetry = () => {
     setRetriedSet(prev => new Set(prev).add(block.id))
@@ -213,7 +268,9 @@ export function Quiz() {
       setIsChecking(false)
       setIsCorrect(null)
     } else {
+      sfx.done()
       confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 }, colors: ['#00A651', '#FFD700', '#003566', '#FFFFFF'] })
+      try { if (lessonId) sessionStorage.setItem('hl:hop', lessonId) } catch { /* sem storage */ }
       if (user && lessonId) {
         users.completeLesson(user.id, lessonId, wrongCount)
           .then(async res => { setXpGained(res.xpGained); await refreshUser() })
@@ -232,6 +289,10 @@ export function Quiz() {
       const correct = selectedOption === block.correctAnswer
       setIsCorrect(correct)
       setIsChecking(true)
+      if (correct) {
+        sfx.ok()
+        confetti({ particleCount: 45, spread: 55, startVelocity: 28, origin: { y: 0.75 }, colors: ['#00A651', '#FFD700', '#FFFFFF'], scalar: 0.8 })
+      } else sfx.no()
       if (!correct) { setHearts(p => Math.max(0, p - 1)); setWrongCount(p => p + 1) }
       if (user) users.submitAnswer(user.id, block.id, correct ? 5 : 2).catch(() => {})
     } else {
@@ -278,15 +339,11 @@ export function Quiz() {
               <>
                 <div className="flex items-start gap-4 mb-6 w-full">
                   {/* Character avatar */}
-                  <motion.div
-                    animate={{ y: [0, -6, 0] }}
-                    transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-                    className="shrink-0 flex flex-col items-center gap-1">
-                    <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full border-2 flex items-center justify-center text-3xl md:text-4xl ${char.bgClass}`}>
-                      {char.emoji}
-                    </div>
-                    <span className={`text-[10px] font-black uppercase tracking-wide ${char.colorClass}`}>{char.name}</span>
-                  </motion.div>
+                  <div className="shrink-0 flex flex-col items-center">
+                    <PixelChar char={moduleNum} pose="idle" scale={3} />
+                    <div className="w-12 h-2 rounded-full bg-black/40 blur-[2px] -mt-1" />
+                    <span className={`text-[10px] font-black uppercase tracking-wide mt-1 ${char.colorClass}`}>{char.name}</span>
+                  </div>
 
                   {/* Speech bubble with content */}
                   <div className={`flex-1 border-2 p-4 md:p-5 rounded-[1.5rem] rounded-tl-sm ${char.bgClass}`}>
@@ -300,15 +357,14 @@ export function Quiz() {
               /* ── Challenge blocks ── */
               <>
                 <h1 className="text-xl md:text-2xl font-black text-white mb-6 leading-tight tracking-tight w-full">{block.title}</h1>
-                {block.type === 'WHO_AM_I' && (
-                  <div className="flex items-end gap-4 mb-8 w-full">
-                    <div className={`w-14 h-14 rounded-full border-2 flex items-center justify-center text-3xl shrink-0 ${char.bgClass}`}>{char.emoji}</div>
-                    <div className="flex-1 bg-(--color-card) border-2 border-(--color-border) p-4 md:p-5 rounded-[1.5rem] rounded-bl-sm text-base md:text-lg font-bold text-white leading-relaxed relative">
-                      {block.content}
-                      <div className="absolute -left-3 bottom-3 w-0 h-0 border-t-[8px] border-t-transparent border-r-[12px] border-r-(--color-border) border-b-[8px] border-b-transparent"></div>
-                    </div>
-                  </div>
-                )}
+                <QuizCompanion
+                  moduleNum={moduleNum}
+                  name={char.name}
+                  state={companionState}
+                  message={isChecking ? (isCorrect ? char.correctMsg : char.wrongMsg) : (block.type === 'WHO_AM_I' ? block.content : thinkMsg)}
+                  bubbleClass={char.bgClass}
+                  nameClass={char.colorClass}
+                />
                 {block.type === 'DECISION_SCENARIO' && (
                   <div className="bg-(--color-accent)/20 border-2 border-(--color-accent) p-5 md:p-7 rounded-[1.5rem] text-base md:text-lg font-bold text-white leading-relaxed mb-8 w-full">
                     <p className="italic">"{block.content}"</p>
@@ -364,7 +420,7 @@ export function Quiz() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-lg">{char.emoji}</span>
+                    <PixelChar char={moduleNum} pose={isCorrect ? 'cheer' : 'sad'} scale={1} animate={false} className="-my-1" />
                     <h2 className="text-base font-black uppercase tracking-tight">
                       {isCorrect ? char.correctMsg : char.wrongMsg}
                     </h2>

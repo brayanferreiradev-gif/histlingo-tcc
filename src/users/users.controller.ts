@@ -17,6 +17,11 @@ export class UsersController {
     return this.usersService.getProgress(req.user.id);
   }
 
+  @Get('topic-stats')
+  getTopicStats(@Request() req: any) {
+    return this.usersService.getTopicStats(req.user.id);
+  }
+
   @Patch('profile')
   updateProfile(@Request() req: any, @Body() dto: { username?: string; avatarEmoji?: string }) {
     return this.usersService.updateProfile(req.user.id, dto);

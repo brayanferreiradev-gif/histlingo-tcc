@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import { Flame, Trophy } from "lucide-react"
 import { users, LeaderboardEntry } from "../lib/api"
 import { useAuth } from "../lib/AuthContext"
+import { Avatar } from "../components/Avatar"
 
 const LEAGUE_COLORS: Record<string, { text: string; bg: string; icon: string; glow: string; gradient: string }> = {
   'Bronze':   { text: 'text-amber-500', bg: 'bg-gradient-to-r from-amber-900/50 to-amber-800/30', icon: '🥉', glow: 'shadow-[0_0_24px_rgba(217,119,6,0.3)]', gradient: 'from-amber-900/60 to-amber-800/40' },
@@ -64,7 +65,7 @@ export function Leaderboard() {
               <motion.div key={e.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
                 className={`flex-1 flex flex-col items-center ${isMe ? 'scale-105' : ''}`}>
-                <div className={`text-4xl mb-1 ${isMe ? 'ring-2 ring-yellow-400 rounded-full' : ''}`}>{e.avatarEmoji}</div>
+                <div className="mb-1"><Avatar value={e.avatarEmoji} size={56} ring={isMe} /></div>
                 <p className="text-white font-black text-sm mb-2 truncate max-w-[80px] text-center">{e.username}</p>
                 <p className="text-(--color-secondary) font-black text-sm mb-1">{e.xpTotal.toLocaleString()} XP</p>
                 <div className={`w-full ${podiumH[idx]} rounded-t-2xl flex items-start justify-center pt-2 border-t-4 ${
@@ -103,7 +104,7 @@ export function Leaderboard() {
                 <span className={`text-xl font-black w-8 text-center ${i < 3 ? RANK_COLORS[i] : 'text-gray-500'}`}>
                   {i < 3 ? ['🥇', '🥈', '🥉'][i] : `${i + 1}`}
                 </span>
-                <span className="text-3xl">{entry.avatarEmoji}</span>
+                <Avatar value={entry.avatarEmoji} size={44} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className={`font-black truncate ${isMe ? 'text-white' : 'text-gray-200'}`}>{entry.username}</p>

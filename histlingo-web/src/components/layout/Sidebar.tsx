@@ -1,6 +1,8 @@
 import { Link, useRoute } from "wouter"
+import { sfx } from "../../lib/sfx"
 import { Map, Trophy, User, Book, LogOut } from "lucide-react"
 import { useAuth } from "../../lib/AuthContext"
+import { Avatar } from "../Avatar"
 
 const NAV = [
   { href: "/", icon: Map, label: "Jornada" },
@@ -12,7 +14,7 @@ const NAV = [
 function NavItem({ href, icon: Icon, label }: { href: string; icon: any; label: string }) {
   const [isActive] = useRoute(href === "/" ? href : `${href}*`)
   return (
-    <Link href={href} className={`
+    <Link href={href} onClick={() => sfx.nav()} className={`
       flex items-center gap-3 w-full py-3 px-4 rounded-2xl font-black text-sm tracking-widest uppercase transition-all border-2
       ${isActive
         ? 'bg-(--color-primary)/15 text-(--color-primary) border-(--color-primary)/40 shadow-[0_0_16px_rgba(0,214,100,0.2),inset_0_0_12px_rgba(0,214,100,0.05)]'
@@ -39,7 +41,7 @@ export function Sidebar() {
     ">
       {/* Logo (desktop only) */}
       <div className="hidden lg:flex items-center gap-3 px-4 mb-6 shrink-0">
-        <div className="w-9 h-9 bg-(--color-primary) rounded-xl flex items-center justify-center text-lg shadow-neo-primary">🏹</div>
+        <Avatar value="px:1" size={38} className="shadow-neo-primary" />
         <span className="text-(--color-primary) font-black text-2xl tracking-tight">HistLingo</span>
       </div>
 
@@ -53,7 +55,7 @@ export function Sidebar() {
         {/* User info */}
         {user && (
           <div className="flex items-center gap-3 px-4 py-3 bg-(--color-card) rounded-2xl border-2 border-(--color-primary)/20 shadow-[0_0_12px_rgba(0,214,100,0.08)]">
-            <span className="text-2xl shrink-0">{user.avatarEmoji}</span>
+            <Avatar value={user.avatarEmoji} size={40} />
             <div className="flex-1 min-w-0">
               <p className="font-black text-white text-sm truncate">{user.username}</p>
               <p className="text-gray-500 text-xs font-bold truncate">{user.xpTotal.toLocaleString()} XP</p>
