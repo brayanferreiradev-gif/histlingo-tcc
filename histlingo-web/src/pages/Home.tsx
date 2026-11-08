@@ -46,7 +46,7 @@ function PathNode({ status, position, href, isFirstActive, activeRef, moduleOrde
   isLastCompleted?: boolean
 }) {
   const dx = position * 22
-  const heroSide = dx > 0 ? "right-full mr-1" : "left-full ml-1"
+  const bubbleSide = dx > 0 ? "right-full mr-9" : "left-full ml-9"
   const isCompleted = status === "completed"
   const isActive = status === "active"
   const nodeCtl = useAnimationControls()
@@ -57,10 +57,10 @@ function PathNode({ status, position, href, isFirstActive, activeRef, moduleOrde
   const inner = (
     <div
       ref={isFirstActive ? activeRef : undefined}
-      className="relative my-4 z-20"
+      className={`relative z-20 ${isActive || isLastCompleted ? "mt-[84px] mb-4" : "my-4"}`}
       style={{ transform: `translateX(${dx}px)` }}>
       {isActive && (
-        <div className="absolute left-1/2 -translate-x-1/2 -top-11 z-30 pointer-events-none">
+        <div className={`absolute -top-[70px] z-30 pointer-events-none ${bubbleSide}`}>
           <motion.div
             animate={{ y: [3, 0, 3] }}
             transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}
@@ -71,7 +71,7 @@ function PathNode({ status, position, href, isFirstActive, activeRef, moduleOrde
         </div>
       )}
       {(isActive || isLastCompleted) && (
-        <div data-hero className={`absolute bottom-0 z-30 pointer-events-none ${heroSide}`}>
+        <div data-hero className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[-8px] z-30 pointer-events-none">
           <HopCharacter moduleOrder={moduleOrder ?? 1} mode={isLastCompleted ? 'celebrate' : 'hop'} hidden={hideHero && isActive} onLand={onLand} />
         </div>
       )}
