@@ -33,7 +33,7 @@ function getLessonStatus(
   return "locked"
 }
 
-function PathNode({ status, position, label, href, isFirstActive, activeRef, moduleOrder, isLastCompleted, lessonId, hideHero }: {
+function PathNode({ status, position, href, isFirstActive, activeRef, moduleOrder, isLastCompleted, lessonId, hideHero }: {
   lessonId: string
   hideHero?: boolean
   status: "completed" | "active" | "locked"
@@ -45,9 +45,8 @@ function PathNode({ status, position, label, href, isFirstActive, activeRef, mod
   moduleOrder?: number
   isLastCompleted?: boolean
 }) {
-  const posMap: Record<number, string> = {
-    0: "right-0", [-1]: "right-8", [-2]: "right-12", 1: "-right-8", 2: "-right-12"
-  }
+  const dx = position * 22
+  const heroSide = dx > 0 ? "right-full mr-1" : "left-full ml-1"
   const isCompleted = status === "completed"
   const isActive = status === "active"
   const nodeCtl = useAnimationControls()
@@ -58,27 +57,25 @@ function PathNode({ status, position, label, href, isFirstActive, activeRef, mod
   const inner = (
     <div
       ref={isFirstActive ? activeRef : undefined}
-      className={`relative flex flex-col items-center my-3 w-full ${posMap[position] ?? 'right-0'}`}>
+      className="relative my-4 z-20"
+      style={{ transform: `translateX(${dx}px)` }}>
+      {isActive && (
+        <div className="absolute left-1/2 -translate-x-1/2 -top-11 z-30 pointer-events-none">
+          <motion.div
+            animate={{ y: [3, 0, 3] }}
+            transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}
+            className="bg-(--color-secondary) text-(--color-night) border-[3px] border-(--color-night) px-3 py-0.5 rounded-xl font-black text-xs uppercase tracking-widest shadow-[3px_3px_0_#0F2226] relative whitespace-nowrap">
+            Começar!
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-(--color-secondary) border-b-[3px] border-r-[3px] border-(--color-night) rotate-45"></div>
+          </motion.div>
+        </div>
+      )}
       {(isActive || isLastCompleted) && (
-        <div className="flex flex-col items-center gap-1 mb-1 z-30">
-          {isActive && (
-            <motion.div
-              animate={{ y: [4, 0, 4] }}
-              transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}
-              className="bg-(--color-secondary) text-(--color-night) border-[3px] border-(--color-night) px-4 py-1 rounded-xl font-black text-xs uppercase tracking-widest shadow-[3px_3px_0_#0F2226] relative mb-10 rotate-3">
-              Começar!
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-(--color-secondary) border-b-[3px] border-r-[3px] border-(--color-night) rotate-45"></div>
-            </motion.div>
-          )}
-          {isLastCompleted && (
-            <div className="bg-(--color-secondary) text-(--color-night) border-[3px] border-(--color-night) px-4 py-1 rounded-xl font-black text-xs uppercase tracking-widest shadow-[3px_3px_0_#0F2226] mb-10">
-              Módulo completo!
-            </div>
-          )}
+        <div data-hero className={`absolute bottom-0 z-30 pointer-events-none ${heroSide}`}>
           <HopCharacter moduleOrder={moduleOrder ?? 1} mode={isLastCompleted ? 'celebrate' : 'hop'} hidden={hideHero && isActive} onLand={onLand} />
         </div>
       )}
-      <motion.div animate={nodeCtl} style={{ transformOrigin: "50% 100%" }} className="relative z-20" data-node data-lesson={lessonId} data-active={isActive ? "true" : undefined}>
+      <motion.div animate={nodeCtl} style={{ transformOrigin: "50% 100%" }} className="relative" data-node data-lesson={lessonId} data-active={isActive ? "true" : undefined}>
         <div className={`absolute -inset-3 rounded-full border-4 ${
           isCompleted ? 'border-(--color-secondary)' :
           isActive ? 'border-t-(--color-secondary) border-r-(--color-secondary) border-b-(--color-secondary) border-l-white/30 rotate-45' :
@@ -94,13 +91,6 @@ function PathNode({ status, position, label, href, isFirstActive, activeRef, mod
           {status === 'locked' && <Lock size={30} strokeWidth={3} />}
         </button>
       </motion.div>
-      {label && (
-        <div className="absolute -left-28 top-1/2 -translate-y-1/2 text-right w-22">
-          <span className="text-(--color-night) font-bold text-xs bg-(--color-paper) px-2 py-1 rounded-lg border-2 border-(--color-night) whitespace-nowrap">
-            {label.length > 12 ? label.substring(0, 12) + '…' : label}
-          </span>
-        </div>
-      )}
     </div>
   )
 
@@ -110,11 +100,13 @@ function PathNode({ status, position, label, href, isFirstActive, activeRef, mod
   return <div className="w-full flex justify-center outline-none">{inner}</div>
 }
 
+let cache: { modules: Module[]; progress: string[] } | null = null
+
 export function Home() {
   useAuth()
-  const [modules, setModules] = useState<Module[]>([])
-  const [completedLessons, setCompletedLessons] = useState<string[]>([])
-  const [loading, setLoading] = useState(true)
+  const [modules, setModules] = useState<Module[]>(cache?.modules ?? [])
+  const [completedLessons, setCompletedLessons] = useState<string[]>(cache?.progress ?? [])
+  const [loading, setLoading] = useState(!cache)
   const activeRef = useRef<HTMLDivElement | null>(null)
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [travel, setTravel] = useState<{ mod: number; from: { x: number; y: number }; to: { x: number; y: number } } | null>(null)
@@ -123,6 +115,7 @@ export function Home() {
   useEffect(() => {
     Promise.all([content.getModules(), users.getProgress()])
       .then(([mods, progress]) => {
+        cache = { modules: mods, progress }
         setModules(mods)
         setCompletedLessons(progress)
         try {
@@ -146,13 +139,22 @@ export function Home() {
       const a = prev.getBoundingClientRect()
       const b = next.getBoundingClientRect()
       const from = { x: a.left - rr.left + a.width / 2, y: a.top - rr.top }
-      const to = { x: b.left - rr.left + b.width / 2, y: b.top - rr.top }
+      const slot = next.closest("[data-hero]") ?? next.parentElement?.querySelector<HTMLElement>("[data-hero]")
+      const sr = slot ? slot.getBoundingClientRect() : null
+      const to = sr ? { x: sr.left - rr.left + sr.width / 2, y: sr.bottom - rr.top } : { x: b.left - rr.left + b.width / 2, y: b.top - rr.top }
       const m = next.closest("section")?.getAttribute("data-mod")
       if (Math.abs(to.y - from.y) > 700) { setPendingHop(null); return }
       setTravel({ mod: m ? parseInt(m) : 1, from, to })
     }, 900)
     return () => clearTimeout(timer)
   }, [loading, pendingHop])
+
+  // Garantia: o personagem nunca fica escondido por mais que alguns segundos.
+  useEffect(() => {
+    if (!pendingHop) return
+    const t = setTimeout(() => { setTravel(null); setPendingHop(null) }, 3500)
+    return () => clearTimeout(t)
+  }, [pendingHop])
 
   // Scroll to first active lesson after data loads
   useEffect(() => {
@@ -182,8 +184,6 @@ export function Home() {
   return (
     <div ref={rootRef} className="flex flex-col gap-14 pb-24 w-full max-w-[480px] mx-auto relative pt-4">
       {/* Path line */}
-      <div className="absolute left-1/2 top-10 bottom-0 w-2.5 bg-white/15 -translate-x-1/2 rounded-full -z-10"></div>
-      <div className="absolute left-1/2 top-10 h-[340px] w-2.5 bg-gradient-to-b from-(--color-secondary) to-(--color-primary) -translate-x-1/2 rounded-t-full -z-10 shadow-none"></div>
 
       {modules.map((mod, modIdx) => {
         const colors = MODULE_COLORS[mod.order] || MODULE_COLORS[1]
@@ -213,7 +213,7 @@ export function Home() {
             </div>
 
             {/* Lesson nodes — exactly as many as lessons, no boss node */}
-            <div className="flex flex-col items-center gap-0">
+            <div className="flex flex-col items-center gap-0 py-2">
               {lessons.map((lesson, i) => {
                 const status = getLessonStatus(i, completedLessons, lessons, moduleUnlocked)
                 const isFirstActive = status === 'active' && !firstActiveFound

@@ -72,7 +72,8 @@ export function HopCharacter({ moduleOrder, mode = "hop", hidden, onLand }: HopP
             await ctl.start({ scaleY: 0.84, scaleX: 1.14, transition: { duration: 0.07 } })
             await ctl.start({ scaleY: 1, scaleX: 1, transition: { type: "spring", stiffness: 520, damping: 13 } })
           } catch {
-            return
+            if (!alive) return
+            await sleep(300)
           }
         }
         await sleep(mode === "celebrate" ? 500 : 1100)
