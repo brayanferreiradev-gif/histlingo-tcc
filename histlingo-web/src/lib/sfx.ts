@@ -59,15 +59,24 @@ function noise(dur: number, vol: number, from: number, to: number) {
   src.start()
 }
 
+/** Evita som duplicado quando vários personagens pulam ao mesmo tempo. */
+const lastPlayed: Record<string, number> = {}
+function dedupe(key: string, play: () => void) {
+  const now = performance.now()
+  if (now - (lastPlayed[key] ?? -1e9) < 450) return
+  lastPlayed[key] = now
+  play()
+}
+
 export const sfx = {
   click: () => tone(note(76), 0, 0.05, "square", 0.05),
   pick: () => tone(note(70), 0, 0.07, "triangle", 0.09),
   nav: () => { tone(note(72), 0, 0.07, "triangle", 0.08); tone(note(79), 0.06, 0.1, "triangle", 0.07) },
   whoosh: () => noise(0.32, 0.08, 400, 2800),
   /** pulo do personagem */
-  jump: () => tone(note(64), 0, 0.16, "square", 0.05, note(76)),
+  jump: () => dedupe("jump", () => tone(note(64), 0, 0.16, "square", 0.05, note(76))),
   /** pouso na estrela */
-  land: () => { tone(note(55), 0, 0.09, "sine", 0.14, note(48)); tone(note(88), 0.02, 0.1, "triangle", 0.05) },
+  land: () => dedupe("land", () => { tone(note(55), 0, 0.09, "sine", 0.14, note(48)); tone(note(88), 0.02, 0.1, "triangle", 0.05) }),
   ok: () => [72, 76, 79, 84].forEach((n, i) => tone(note(n), i * 0.07, 0.18, "triangle", 0.12)),
   no: () => { tone(190, 0, 0.28, "sawtooth", 0.1, 90); tone(140, 0.05, 0.28, "square", 0.05, 70) },
   done: () => {
