@@ -15,7 +15,7 @@ function NavItem({ href, icon: Icon, label }: { href: string; icon: any; label: 
   const [isActive] = useRoute(href === "/" ? href : `${href}*`)
   return (
     <Link href={href} onClick={() => sfx.nav()} className={`
-      flex items-center gap-3 w-full py-3 px-4 rounded-2xl font-black text-sm tracking-widest uppercase transition-all border-2
+      flex items-center justify-center lg:justify-start gap-3 lg:w-full py-3 px-5 lg:px-4 rounded-2xl font-black text-sm tracking-widest uppercase transition-all border-2
       ${isActive
         ? 'bg-(--color-secondary) text-(--color-night) border-(--color-night) shadow-[3px_3px_0_#0F2226] -translate-x-px -translate-y-px'
         : 'text-(--color-night) border-transparent hover:bg-(--color-chart)'}
