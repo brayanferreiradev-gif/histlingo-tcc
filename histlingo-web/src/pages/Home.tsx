@@ -9,11 +9,11 @@ import { PixelChar } from "../components/PixelChar"
 import { sfx } from "../lib/sfx"
 
 const MODULE_COLORS: Record<number, { bg: string; border: string; shadow: string; glow: string }> = {
-  1: { bg: 'bg-gradient-to-r from-[#00D664] to-[#00A84F]', border: 'border-[#00A84F]', shadow: 'shadow-[0_4px_0_#00843D]', glow: 'shadow-[0_8px_32px_rgba(0,214,100,0.35)]' },
-  2: { bg: 'bg-gradient-to-r from-[#4A8EFF] to-[#2B6EE8]', border: 'border-[#2B6EE8]', shadow: 'shadow-[0_4px_0_#1A55CC]', glow: 'shadow-[0_8px_32px_rgba(74,142,255,0.35)]' },
-  3: { bg: 'bg-gradient-to-r from-[#A855F7] to-[#7C3AED]', border: 'border-[#6D28D9]', shadow: 'shadow-[0_4px_0_#5B21B6]', glow: 'shadow-[0_8px_32px_rgba(168,85,247,0.35)]' },
-  4: { bg: 'bg-gradient-to-r from-[#EF4444] to-[#DC2626]', border: 'border-[#991B1B]', shadow: 'shadow-[0_4px_0_#7F1D1D]', glow: 'shadow-[0_8px_32px_rgba(239,68,68,0.35)]' },
-  5: { bg: 'bg-gradient-to-r from-[#FFB800] to-[#D97706]', border: 'border-[#B45309]', shadow: 'shadow-[0_4px_0_#92400E]', glow: 'shadow-[0_8px_32px_rgba(255,184,0,0.35)]' },
+  1: { bg: 'bg-[#9CCBB0]', border: 'border-(--color-night)', shadow: 'shadow-[6px_6px_0_#0F2226]', glow: '' },
+  2: { bg: 'bg-[#8FB6D6]', border: 'border-(--color-night)', shadow: 'shadow-[6px_6px_0_#0F2226]', glow: '' },
+  3: { bg: 'bg-[#BBAADC]', border: 'border-(--color-night)', shadow: 'shadow-[6px_6px_0_#0F2226]', glow: '' },
+  4: { bg: 'bg-[#E8A89C]', border: 'border-(--color-night)', shadow: 'shadow-[6px_6px_0_#0F2226]', glow: '' },
+  5: { bg: 'bg-[#E0B04A]', border: 'border-(--color-night)', shadow: 'shadow-[6px_6px_0_#0F2226]', glow: '' },
 }
 const SINUOUS = [0, -1, -2, -1, 0, 1, 2, 1, 0]
 
@@ -65,13 +65,13 @@ function PathNode({ status, position, label, href, isFirstActive, activeRef, mod
             <motion.div
               animate={{ y: [4, 0, 4] }}
               transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}
-              className="bg-white text-(--color-primary-dark) border-2 border-(--color-border) px-4 py-1 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg relative mb-10">
+              className="bg-(--color-secondary) text-(--color-night) border-[3px] border-(--color-night) px-4 py-1 rounded-xl font-black text-xs uppercase tracking-widest shadow-[3px_3px_0_#0F2226] relative mb-10 rotate-3">
               Começar!
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-b-2 border-r-2 border-(--color-border) rotate-45"></div>
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-(--color-secondary) border-b-[3px] border-r-[3px] border-(--color-night) rotate-45"></div>
             </motion.div>
           )}
           {isLastCompleted && (
-            <div className="bg-yellow-400 text-yellow-900 border-2 border-yellow-600 px-4 py-1 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg mb-10">
+            <div className="bg-(--color-secondary) text-(--color-night) border-[3px] border-(--color-night) px-4 py-1 rounded-xl font-black text-xs uppercase tracking-widest shadow-[3px_3px_0_#0F2226] mb-10">
               Módulo completo!
             </div>
           )}
@@ -81,13 +81,13 @@ function PathNode({ status, position, label, href, isFirstActive, activeRef, mod
       <motion.div animate={nodeCtl} style={{ transformOrigin: "50% 100%" }} className="relative z-20" data-node data-lesson={lessonId} data-active={isActive ? "true" : undefined}>
         <div className={`absolute -inset-3 rounded-full border-4 ${
           isCompleted ? 'border-(--color-secondary)' :
-          isActive ? 'border-t-(--color-secondary) border-r-(--color-secondary) border-b-(--color-secondary) border-l-[#2B3B4C] rotate-45' :
+          isActive ? 'border-t-(--color-secondary) border-r-(--color-secondary) border-b-(--color-secondary) border-l-white/30 rotate-45' :
           'border-transparent'
         }`}></div>
         <button className={`node-btn relative
-          ${isCompleted ? 'bg-(--color-secondary) text-(--color-secondary-dark) border-white shadow-neo-secondary hover:brightness-110' : ''}
-          ${isActive ? 'bg-(--color-primary) text-white border-white shadow-neo-primary glow-primary -rotate-45 hover:brightness-110 scale-110' : ''}
-          ${status === 'locked' ? 'bg-(--color-input) text-gray-500 border-gray-600 shadow-neo-card cursor-not-allowed' : ''}
+          ${isCompleted ? 'bg-(--color-secondary) text-(--color-night) border-(--color-night) shadow-neo-secondary hover:brightness-110' : ''}
+          ${isActive ? 'bg-(--color-primary) text-white border-(--color-night) shadow-neo-primary -rotate-45 hover:brightness-110 scale-110' : ''}
+          ${status === 'locked' ? 'bg-white/20 text-white border-white border-dashed cursor-not-allowed' : ''}
         `}>
           {isCompleted && <Check size={34} strokeWidth={3.5} />}
           {isActive && <Star size={34} fill="white" strokeWidth={0} />}
@@ -96,7 +96,7 @@ function PathNode({ status, position, label, href, isFirstActive, activeRef, mod
       </motion.div>
       {label && (
         <div className="absolute -left-28 top-1/2 -translate-y-1/2 text-right w-22">
-          <span className="text-gray-400 font-bold text-xs bg-(--color-background) px-2 py-1 rounded-lg border border-(--color-border) whitespace-nowrap">
+          <span className="text-(--color-night) font-bold text-xs bg-(--color-paper) px-2 py-1 rounded-lg border-2 border-(--color-night) whitespace-nowrap">
             {label.length > 12 ? label.substring(0, 12) + '…' : label}
           </span>
         </div>
@@ -170,7 +170,7 @@ export function Home() {
         <motion.div animate={{ y: [0, -22, 0] }} transition={{ repeat: Infinity, duration: 0.7, ease: "easeOut" }}>
           <PixelChar char={1} pose="jump" scale={3} animate={false} />
         </motion.div>
-        <p className="text-gray-400 font-bold">Carregando mapa...</p>
+        <p className="text-white/80 font-bold">Carregando mapa...</p>
       </div>
     )
   }
@@ -182,8 +182,8 @@ export function Home() {
   return (
     <div ref={rootRef} className="flex flex-col gap-14 pb-24 w-full max-w-[480px] mx-auto relative pt-4">
       {/* Path line */}
-      <div className="absolute left-1/2 top-10 bottom-0 w-2.5 bg-[#1A2B3C] -translate-x-1/2 rounded-full -z-10"></div>
-      <div className="absolute left-1/2 top-10 h-[340px] w-2.5 bg-gradient-to-b from-(--color-secondary) to-(--color-primary) -translate-x-1/2 rounded-t-full -z-10 shadow-[0_0_16px_rgba(255,184,0,0.4)]"></div>
+      <div className="absolute left-1/2 top-10 bottom-0 w-2.5 bg-white/15 -translate-x-1/2 rounded-full -z-10"></div>
+      <div className="absolute left-1/2 top-10 h-[340px] w-2.5 bg-gradient-to-b from-(--color-secondary) to-(--color-primary) -translate-x-1/2 rounded-t-full -z-10 shadow-none"></div>
 
       {modules.map((mod, modIdx) => {
         const colors = MODULE_COLORS[mod.order] || MODULE_COLORS[1]
@@ -196,20 +196,20 @@ export function Home() {
         return (
           <section key={mod.id} data-mod={mod.order} className="relative w-full z-10">
             {/* Module header */}
-            <div className={`${colors.bg} text-white p-6 rounded-[2rem] mb-8 ${colors.shadow} ${moduleUnlocked ? colors.glow : ''} flex items-center justify-between overflow-hidden relative border-2 ${colors.border} ${!moduleUnlocked ? 'opacity-40 grayscale' : ''}`}>
+            <div className={`${colors.bg} text-(--color-night) p-6 rounded-[1.5rem] mb-8 ${colors.shadow} ${moduleUnlocked ? colors.glow : ''} flex items-center justify-between overflow-hidden relative border-[3px] ${colors.border} ${!moduleUnlocked ? 'opacity-40 grayscale' : ''}`}>
               <div className="z-10">
-                <h2 className="text-2xl md:text-3xl font-black mb-1 tracking-tight">Unidade {mod.order}</h2>
-                <p className="text-base md:text-lg font-bold opacity-90">{mod.title}</p>
-                <p className="mt-2 text-xs font-bold bg-black/20 self-start inline-block px-3 py-1 rounded-xl">
+                <h2 className="font-display text-2xl md:text-3xl mb-1">Unidade {mod.order}</h2>
+                <p className="text-base md:text-lg font-bold">{mod.title}</p>
+                <p className="mt-2 text-xs font-bold bg-(--color-paper) border-2 border-(--color-night) self-start inline-block px-3 py-1 rounded-xl font-mono">
                   {!moduleUnlocked
                     ? 'Bloqueado'
                     : `${lessons.filter(l => completedLessons.includes(l.id)).length}/${lessons.length} lições`}
                 </p>
               </div>
-              <div className="w-20 h-20 md:w-24 md:h-24 bg-white/20 rounded-full flex items-end justify-center overflow-hidden z-10 border-4 border-white/30">
+              <div className="w-20 h-20 md:w-24 md:h-24 bg-(--color-paper) rounded-[1.25rem] rotate-3 flex items-end justify-center overflow-hidden z-10 border-[3px] border-(--color-night) shadow-[3px_3px_0_#0F2226]">
                 <PixelChar char={mod.order} pose="idle" scale={3} className="-mb-1" />
               </div>
-              <div className="absolute -right-4 -bottom-4 w-28 h-28 bg-white/10 rounded-full -z-0 blur-xl"></div>
+              <div className="absolute inset-0 opacity-25 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle,#0F2226 0 2px,transparent 2.5px)", backgroundSize: "14px 14px", maskImage: "linear-gradient(100deg,transparent 40%,#000)" }}></div>
             </div>
 
             {/* Lesson nodes — exactly as many as lessons, no boss node */}
@@ -255,7 +255,7 @@ export function Home() {
       )}
 
       {modules.length === 0 && (
-        <div className="text-center text-gray-400 font-bold py-20">
+        <div className="text-center text-white/80 font-bold py-20">
           <div className="flex justify-center mb-4"><PixelChar char={1} pose="idle" scale={3} /></div>
           <p>Conteúdo carregando...</p>
         </div>

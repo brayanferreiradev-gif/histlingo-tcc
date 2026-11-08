@@ -36,31 +36,31 @@ interface Character {
 const MODULE_CHARACTERS: Record<number, Character> = {
   1: {
     name: 'Cauã', role: 'Guia dos Povos Originários',
-    colorClass: 'text-emerald-400', bgClass: 'bg-emerald-900/30 border-emerald-600/40',
+    colorClass: 'text-(--color-secondary)', bgClass: 'bg-(--color-paper) border-(--color-night) shadow-[3px_3px_0_#0F2226] text-(--color-night)',
     correctMsg: 'Os espíritos ancestrais te guiam, guerreiro!',
     wrongMsg: 'A terra tem muitos saberes. Tente novamente!',
   },
   2: {
     name: 'Capitão Duarte', role: 'Explorador Colonial',
-    colorClass: 'text-sky-400', bgClass: 'bg-sky-900/30 border-sky-600/40',
+    colorClass: 'text-(--color-secondary)', bgClass: 'bg-(--color-paper) border-(--color-night) shadow-[3px_3px_0_#0F2226] text-(--color-night)',
     correctMsg: 'Ventos favoráveis! Você está no caminho certo.',
     wrongMsg: 'O oceano é traiçoeiro. Mas todo erro ensina.',
   },
   3: {
     name: 'D. Pedro', role: 'Voz do Império',
-    colorClass: 'text-yellow-400', bgClass: 'bg-yellow-900/30 border-yellow-600/40',
+    colorClass: 'text-(--color-secondary)', bgClass: 'bg-(--color-paper) border-(--color-night) shadow-[3px_3px_0_#0F2226] text-(--color-night)',
     correctMsg: 'Pela honra do Império! Resposta magnífica.',
     wrongMsg: 'A história é complexa, mas você aprenderá.',
   },
   4: {
     name: 'Zeca Operário', role: 'Arauto da República',
-    colorClass: 'text-orange-400', bgClass: 'bg-orange-900/30 border-orange-600/40',
+    colorClass: 'text-(--color-secondary)', bgClass: 'bg-(--color-paper) border-(--color-night) shadow-[3px_3px_0_#0F2226] text-(--color-night)',
     correctMsg: 'Ordem e Progresso! Você conhece a história.',
     wrongMsg: 'A República foi construída com erros e acertos.',
   },
   5: {
     name: 'Luzia', role: 'Voz da Democracia',
-    colorClass: 'text-rose-400', bgClass: 'bg-rose-900/30 border-rose-600/40',
+    colorClass: 'text-(--color-secondary)', bgClass: 'bg-(--color-paper) border-(--color-night) shadow-[3px_3px_0_#0F2226] text-(--color-night)',
     correctMsg: 'Diretas Já! A história do povo está em você.',
     wrongMsg: 'A luta continua. Cada erro nos torna mais fortes.',
   },
@@ -182,7 +182,7 @@ export function Quiz() {
             <PixelChar char={moduleNum} pose="cheer" scale={6} animate={false} />
           </motion.div>
         </motion.div>
-        <h1 className="text-4xl font-black text-white tracking-tight">Lição completa!</h1>
+        <h1 className="font-display text-4xl text-white [text-shadow:4px_4px_0_#0F2226]">Lição completa!</h1>
         <p className="text-xl font-bold text-(--color-secondary)">+{xpGained} XP conquistados</p>
         {wrongCount > 0 && (
           <p className="text-sm text-gray-400 font-bold">
@@ -190,11 +190,11 @@ export function Quiz() {
           </p>
         )}
         {/* Character congratulation */}
-        <div className={`flex items-center gap-3 border rounded-2xl px-5 py-3 mt-1 ${char.bgClass}`}>
+        <div className={`flex items-center gap-3 border-[3px] rounded-2xl px-5 py-3 mt-1 ${char.bgClass}`}>
           <PixelChar char={moduleNum} pose="idle" scale={2} />
           <div className="text-left">
-            <p className={`font-black text-sm ${char.colorClass}`}>{char.name}</p>
-            <p className="text-white text-sm font-bold">{accuracy >= 80 ? char.correctMsg : 'Continue praticando!'}</p>
+            <p className="font-black text-sm text-(--color-night)">{char.name}</p>
+            <p className="text-(--color-night) text-sm font-semibold">{accuracy >= 80 ? char.correctMsg : 'Continue praticando!'}</p>
           </div>
         </div>
         <div className="flex gap-4 mt-2">
@@ -206,12 +206,12 @@ export function Quiz() {
           {newMedal && (
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-3">
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-yellow-300">Nova medalha!</p>
+              className="fixed inset-0 z-[120] bg-[#0F2226]/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-3">
+              <p className="text-xs font-mono uppercase tracking-[0.3em] text-(--color-secondary)">Nova medalha!</p>
               <div className="w-[min(78vw,340px)] h-[min(78vw,340px)]">
                 <Medal3D order={newMedal.order} tier={newMedal.tier} intro className="w-full h-full" />
               </div>
-              <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight">
+              <h2 className="font-display text-3xl md:text-4xl text-white [text-shadow:4px_4px_0_#0F2226]">
                 {TIER_LABEL[newMedal.tier]} em {newMedal.title}
               </h2>
               <p className="text-gray-300 font-bold">Você acertou {newMedal.accuracy}% das perguntas deste assunto.</p>
@@ -231,12 +231,12 @@ export function Quiz() {
       <div className="fixed inset-0 bg-(--color-background) z-[100] flex flex-col items-center justify-center p-8 text-center gap-6">
         <motion.div initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 180, damping: 12 }}><PixelChar char={moduleNum} pose="sad" scale={6} /></motion.div>
         <div>
-          <h1 className="text-4xl font-black text-white mb-3 tracking-tight">Vidas esgotadas!</h1>
+          <h1 className="font-display text-4xl text-white mb-3 [text-shadow:4px_4px_0_#0F2226]">Vidas esgotadas!</h1>
           <p className="text-lg font-bold text-gray-400">Cada erro é um aprendizado. Tente novamente!</p>
         </div>
-        <div className={`flex items-center gap-3 border rounded-2xl px-5 py-3 ${char.bgClass}`}>
+        <div className={`flex items-center gap-3 border-[3px] rounded-2xl px-5 py-3 ${char.bgClass}`}>
           <PixelChar char={moduleNum} pose="sad" scale={2} animate={false} />
-          <p className={`font-bold text-sm ${char.colorClass}`}>{char.wrongMsg}</p>
+          <p className="font-semibold text-sm text-(--color-night)">{char.wrongMsg}</p>
         </div>
         <button className="btn-base btn-primary w-full max-w-sm py-5" onClick={() => setLocation('/')}>VOLTAR AO MAPA</button>
       </div>
@@ -302,27 +302,27 @@ export function Quiz() {
 
   // Footer bg changes when feedback is showing
   const footerBg = !isTheory && isChecking
-    ? (isCorrect ? 'bg-(--color-primary-dark) border-transparent' : 'bg-(--color-destructive-dark) border-transparent')
-    : 'bg-(--color-background) border-(--color-border)'
+    ? (isCorrect ? 'bg-[#BFDDCC] border-(--color-night)' : 'bg-[#EDBDB5] border-(--color-night)')
+    : 'bg-(--color-paper) border-(--color-night)'
 
   return (
     // h-[100svh] = small viewport height — fixes iOS Safari where 100vh > visible area
-    <div className="flex flex-col h-[100svh] max-w-[900px] mx-auto bg-(--color-background) select-none">
+    <div className="flex flex-col h-[100svh] max-w-[900px] mx-auto select-none">
 
       {/* ── Header ─────────────────────────────────────────────── */}
       <div className="shrink-0 flex items-center px-4 py-3 md:px-8 md:py-5 gap-4">
-        <button onClick={() => setLocation('/')} className="p-2 rounded-full hover:bg-white/5 transition-colors">
-          <X size={28} className="text-gray-500" strokeWidth={3} />
+        <button onClick={() => setLocation('/')} className="p-2 rounded-xl border-[3px] border-(--color-night) bg-(--color-paper) shadow-[2px_2px_0_#0F2226] hover:bg-(--color-destructive) transition-colors">
+          <X size={22} className="text-(--color-night)" strokeWidth={3} />
         </button>
-        <div className="flex-1 h-4 bg-[#0F1C29] rounded-full overflow-hidden border-2 border-[#1A2B3C]">
+        <div className="flex-1 h-5 bg-(--color-paper) rounded-full overflow-hidden border-[3px] border-(--color-night)">
           <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }}
-            className="h-full bg-gradient-to-r from-(--color-primary) to-(--color-accent) rounded-full shadow-[0_0_8px_rgba(0,214,100,0.5)]">
+            className="h-full bg-(--color-primary) border-r-[3px] border-(--color-night) rounded-full">
             <div className="h-1 mt-1 mx-1 bg-white/30 rounded-full"></div>
           </motion.div>
         </div>
         <div className="flex items-center gap-1.5">
-          <Heart size={24} fill="#FF4B4B" color="#FF4B4B" className={hearts === 1 ? 'animate-pulse' : ''} />
-          <span className="text-(--color-destructive) font-black text-lg">{hearts}</span>
+          <Heart size={24} fill="#C95A4A" color="#0F2226" className={hearts === 1 ? 'animate-pulse' : ''} />
+          <span className="text-white font-mono font-medium text-lg">{hearts}</span>
         </div>
       </div>
 
@@ -346,17 +346,17 @@ export function Quiz() {
                   </div>
 
                   {/* Speech bubble with content */}
-                  <div className={`flex-1 border-2 p-4 md:p-5 rounded-[1.5rem] rounded-tl-sm ${char.bgClass}`}>
-                    <p className={`text-xs font-black uppercase tracking-widest mb-2 ${char.colorClass}`}>{char.role}</p>
-                    <p className="text-base md:text-lg font-bold text-white leading-relaxed">{block.content}</p>
+                  <div className={`flex-1 border-[3px] p-4 md:p-5 rounded-[1.5rem] rounded-tl-sm ${char.bgClass}`}>
+                    <p className="text-xs font-mono uppercase tracking-widest mb-2 text-(--color-mute)">{char.role}</p>
+                    <p className="text-base md:text-lg font-semibold text-(--color-night) leading-relaxed">{block.content}</p>
                   </div>
                 </div>
-                <h2 className={`text-2xl md:text-3xl font-black mb-4 tracking-tight ${char.colorClass}`}>{block.title}</h2>
+                <h2 className={`font-display text-2xl md:text-3xl mb-4 text-white [text-shadow:3px_3px_0_#0F2226]`}>{block.title}</h2>
               </>
             ) : (
               /* ── Challenge blocks ── */
               <>
-                <h1 className="text-xl md:text-2xl font-black text-white mb-6 leading-tight tracking-tight w-full">{block.title}</h1>
+                <h1 className="font-display text-2xl md:text-3xl text-white mb-6 leading-tight w-full [text-shadow:3px_3px_0_#0F2226]">{block.title}</h1>
                 <QuizCompanion
                   moduleNum={moduleNum}
                   name={char.name}
@@ -366,12 +366,12 @@ export function Quiz() {
                   nameClass={char.colorClass}
                 />
                 {block.type === 'DECISION_SCENARIO' && (
-                  <div className="bg-(--color-accent)/20 border-2 border-(--color-accent) p-5 md:p-7 rounded-[1.5rem] text-base md:text-lg font-bold text-white leading-relaxed mb-8 w-full">
+                  <div className="bg-(--color-pink,#E3AEB4) border-[3px] border-(--color-night) shadow-[4px_4px_0_#0F2226] p-5 md:p-7 rounded-[1.5rem] text-base md:text-lg font-semibold text-(--color-night) leading-relaxed mb-8 w-full">
                     <p className="italic">"{block.content}"</p>
                   </div>
                 )}
                 {(block.type === 'WORKS_AND_RELICS' || block.type === 'TIMELINE') && (
-                  <div className="bg-[#1A2633] border-2 border-[#2B3B4C] p-5 md:p-7 rounded-[1.5rem] text-base md:text-lg font-bold text-white leading-relaxed mb-8 w-full">
+                  <div className="bg-(--color-paper) border-[3px] border-(--color-night) shadow-[4px_4px_0_#0F2226] p-5 md:p-7 rounded-[1.5rem] text-base md:text-lg font-semibold text-(--color-night) leading-relaxed mb-8 w-full">
                     <p>{block.content}</p>
                   </div>
                 )}
@@ -379,18 +379,18 @@ export function Quiz() {
                   <div className="grid grid-cols-1 gap-3 w-full">
                     {block.options.map((opt, i) => {
                       const isSelected = selectedOption === opt
-                      let cls = 'bg-(--color-card) border-(--color-border) text-white hover:bg-white/5 hover:border-white/20 hover:shadow-[0_0_12px_rgba(74,142,255,0.15)]'
+                      let cls = 'bg-(--color-paper) border-(--color-night) text-(--color-night) shadow-[4px_4px_0_#0F2226] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_#0F2226]'
                       if (isChecking && isSelected)
-                        cls = isCorrect ? 'bg-(--color-primary)/20 border-(--color-primary) text-(--color-primary) shadow-[0_0_16px_rgba(0,214,100,0.3)]' : 'bg-(--color-destructive)/20 border-(--color-destructive) text-(--color-destructive)'
+                        cls = isCorrect ? 'bg-[#BFDDCC] border-(--color-night) text-(--color-night) shadow-[4px_4px_0_#0F2226]' : 'bg-[#EDBDB5] border-(--color-night) text-(--color-night) shadow-[4px_4px_0_#0F2226]'
                       else if (isChecking && opt === block.correctAnswer)
-                        cls = 'border-(--color-primary) bg-(--color-primary)/10 text-(--color-primary) shadow-[0_0_16px_rgba(0,214,100,0.25)]'
+                        cls = 'border-(--color-night) bg-[#BFDDCC] text-(--color-night) shadow-[4px_4px_0_#0F2226]'
                       else if (isSelected && !isChecking)
-                        cls = 'bg-(--color-accent)/20 border-(--color-accent) text-white shadow-[0_0_16px_rgba(74,142,255,0.3)]'
+                        cls = 'bg-(--color-secondary) border-(--color-night) text-(--color-night) shadow-[4px_4px_0_#0F2226]'
                       return (
                         <button key={i} disabled={isChecking} onClick={() => handleSelect(opt)}
-                          className={`group p-4 md:p-5 rounded-2xl text-left text-sm md:text-base font-black border-2 transition-all duration-150 outline-none active:translate-y-0.5 ${cls}`}>
+                          className={`group p-4 md:p-5 rounded-2xl text-left text-sm md:text-base font-bold border-[3px] transition-all duration-150 outline-none active:translate-x-1 active:translate-y-1 active:!shadow-none ${cls}`}>
                           <div className="flex items-center gap-3">
-                            <span className={`w-7 h-7 rounded-lg border-2 flex items-center justify-center text-xs font-black shrink-0 ${isSelected ? 'border-current' : 'text-gray-500 border-(--color-border)'}`}>{i + 1}</span>
+                            <span className={`w-8 h-8 rounded-[10px] border-[3px] border-(--color-night) bg-(--color-chart) flex items-center justify-center text-xs font-mono shrink-0`}>{i + 1}</span>
                             <span className="flex-1 leading-snug">{opt}</span>
                           </div>
                         </button>
@@ -413,19 +413,19 @@ export function Quiz() {
             <motion.div
               initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
               transition={{ type: "spring", stiffness: 220, damping: 26 }}
-              className={`absolute bottom-full left-0 right-0 px-5 pt-5 pb-4 rounded-t-[28px] shadow-[0_-16px_32px_rgba(0,0,0,0.5)] ${isCorrect ? 'bg-(--color-primary-dark)' : 'bg-(--color-destructive-dark)'}`}>
-              <div className="max-w-[640px] mx-auto flex items-start gap-3 text-white">
-                <div className="p-2.5 rounded-xl bg-white/20 shrink-0">
+              className={`absolute bottom-full left-0 right-0 px-5 pt-5 pb-4 rounded-t-[28px] border-t-[3px] border-x-[3px] border-(--color-night) ${isCorrect ? 'bg-[#BFDDCC]' : 'bg-[#EDBDB5]'}`}>
+              <div className="max-w-[640px] mx-auto flex items-start gap-3 text-(--color-night)">
+                <div className="p-2.5 rounded-xl bg-(--color-paper) border-[3px] border-(--color-night) shrink-0">
                   {isCorrect ? <CheckCircle size={30} strokeWidth={2.5} /> : <XCircle size={30} strokeWidth={2.5} />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <PixelChar char={moduleNum} pose={isCorrect ? 'cheer' : 'sad'} scale={1} animate={false} className="-my-1" />
-                    <h2 className="text-base font-black uppercase tracking-tight">
+                    <h2 className="font-display text-base">
                       {isCorrect ? char.correctMsg : char.wrongMsg}
                     </h2>
                   </div>
-                  <p className="text-sm font-bold text-white/85 leading-snug">{block.explanation}</p>
+                  <p className="text-sm font-semibold leading-snug">{block.explanation}</p>
                 </div>
               </div>
             </motion.div>
@@ -433,12 +433,12 @@ export function Quiz() {
         </AnimatePresence>
 
         {/* Action buttons */}
-        <div className={`px-4 py-3 md:px-6 md:py-4 border-t-2 transition-colors duration-300 ${footerBg}`}>
+        <div className={`px-4 py-3 md:px-6 md:py-4 border-t-[3px] transition-colors duration-300 ${footerBg}`}>
           <div className="max-w-[640px] mx-auto flex flex-col gap-2">
             {/* Retry button */}
             {!isTheory && isChecking && canRetry && (
               <button onClick={handleRetry}
-                className="btn-base btn-outline w-full py-3 text-sm flex items-center justify-center gap-2 border-white/30 text-white">
+                className="btn-base btn-outline w-full py-3 text-sm flex items-center justify-center gap-2">
                 <RotateCcw size={16} strokeWidth={3} />
                 TENTAR NOVAMENTE
               </button>
@@ -448,7 +448,7 @@ export function Quiz() {
               className={`btn-base w-full py-4 text-base tracking-widest ${
                 isTheory ? 'btn-secondary' :
                 (!selectedOption && !isChecking) ? 'btn-disabled' :
-                isChecking ? (isCorrect ? 'btn-primary border-white/20' : 'btn-danger border-white/20') :
+                isChecking ? (isCorrect ? 'btn-primary' : 'btn-danger') :
                 'btn-secondary'
               }`}>
               <span className="flex items-center justify-center gap-2">

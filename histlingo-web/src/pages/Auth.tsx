@@ -18,7 +18,7 @@ const FLOATING_ICONS = [
   { char: 5, x: '46%', y: '4%',  delay: 1.5, dur: 4.0 },
 ]
 
-const inputCls = "w-full bg-[#070E18] border-2 border-[#1A2B3C] px-5 py-4 rounded-2xl text-base font-bold text-white outline-none focus:border-(--color-primary) focus:shadow-[0_0_0_3px_rgba(0,214,100,0.15)] transition-all placeholder:text-gray-600 shadow-inner"
+const inputCls = "w-full bg-(--color-chart) border-[3px] border-(--color-night) px-5 py-4 rounded-2xl text-base font-semibold text-(--color-night) outline-none focus:bg-white focus:shadow-[4px_4px_0_#E0B04A] transition-all placeholder:text-(--color-mute)"
 
 export function Auth() {
   const { login, register } = useAuth()
@@ -118,17 +118,17 @@ export function Auth() {
               ))}
             </div>
 
-            <h1 className="font-black text-white leading-none tracking-tighter mb-1">
+            <h1 className="font-display text-white leading-none mb-1 [text-shadow:4px_4px_0_#0F2226]">
               <span className="text-5xl sm:text-6xl">Hist</span>
-              <span className="text-5xl sm:text-6xl text-(--color-primary)">Lingo</span>
+              <span className="text-5xl sm:text-6xl text-(--color-secondary)">Lingo</span>
             </h1>
-            <p className="text-gray-400 font-bold text-base sm:text-lg mt-2 mb-1">A história do Brasil.</p>
+            <p className="text-white/85 font-semibold text-base sm:text-lg mt-2 mb-1">A história do Brasil.</p>
             <p className="text-(--color-secondary) font-black text-xl sm:text-2xl mb-8">Jogada a sério.</p>
 
             {/* Feature chips */}
             <div className="flex gap-2 flex-wrap justify-center mb-8">
               {['5 Módulos', '15 Lições', 'Ranking Global', 'Gratuito'].map(chip => (
-                <span key={chip} className="bg-white/5 border border-white/10 text-gray-400 text-xs font-black px-3 py-1.5 rounded-full uppercase tracking-wide">
+                <span key={chip} className="bg-(--color-paper) border-2 border-(--color-night) text-(--color-night) text-xs font-mono px-3 py-1.5 rounded-full uppercase tracking-wide shadow-[2px_2px_0_#0F2226]">
                   {chip}
                 </span>
               ))}
@@ -149,7 +149,7 @@ export function Auth() {
               </button>
             </div>
 
-            <p className="text-gray-700 text-xs font-bold mt-8 uppercase tracking-widest">
+            <p className="text-white/60 text-xs font-mono mt-8 uppercase tracking-widest">
               TCC · IFRS Farroupilha · 2026
             </p>
           </motion.div>
@@ -162,14 +162,14 @@ export function Auth() {
             transition={{ type: "spring", damping: 28, stiffness: 280 }}
             className="w-full max-w-sm mx-auto px-4 relative">
           <button onClick={() => { setScreen('landing'); reset() }}
-            className="absolute -top-10 left-1 p-2 rounded-full hover:bg-white/10 transition-colors z-10">
-            <X size={26} className="text-gray-400" strokeWidth={3} />
+            className="absolute -top-10 left-1 p-2 rounded-xl bg-(--color-paper) border-[3px] border-(--color-night) hover:bg-(--color-secondary) transition-colors z-10">
+            <X size={22} className="text-(--color-night)" strokeWidth={3} />
           </button>
 
-          <div className="glass border-2 border-white/8 rounded-[2rem] p-6 shadow-[0_24px_48px_rgba(0,0,0,0.6)]">
+          <div className="glass border-[3px] border-(--color-night) rounded-[2rem] p-6 shadow-[6px_6px_0_#0F2226]">
 
             <div className="mb-7 text-center">
-              <h2 className="text-3xl font-black text-white mb-1">
+              <h2 className="font-display text-3xl text-(--color-night) mb-1">
                 {screen === 'login' ? 'Bem-vindo de volta!' : 'Crie seu perfil'}
               </h2>
               <p className="text-gray-500 text-sm font-bold">
@@ -185,9 +185,9 @@ export function Auth() {
               <input name="password" type="password" placeholder="Senha" required minLength={6} className={inputCls} autoComplete={screen === 'login' ? 'current-password' : 'new-password'} />
 
               {error && (
-                <div className="flex items-start gap-3 bg-red-950/80 border border-red-500/30 rounded-2xl px-4 py-3">
-                  <AlertCircle size={18} className="text-red-400 shrink-0 mt-0.5" />
-                  <p className="text-red-300 font-bold text-sm">{error}</p>
+                <div className="flex items-start gap-3 bg-[#EDBDB5] border-[3px] border-(--color-night) rounded-2xl px-4 py-3">
+                  <AlertCircle size={18} className="text-(--color-night) shrink-0 mt-0.5" />
+                  <p className="text-(--color-night) font-semibold text-sm">{error}</p>
                 </div>
               )}
 
@@ -224,13 +224,13 @@ export function Auth() {
             initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", damping: 28 }}
             className="w-full max-w-sm mx-auto px-4 relative">
-            <button onClick={() => { setScreen('login'); reset() }} className="absolute -top-10 left-1 p-2 rounded-full hover:bg-white/10 z-10">
-              <X size={26} className="text-gray-400" strokeWidth={3} />
+            <button onClick={() => { setScreen('login'); reset() }} className="absolute -top-10 left-1 p-2 rounded-xl bg-(--color-paper) border-[3px] border-(--color-night) hover:bg-(--color-secondary) z-10">
+              <X size={22} className="text-(--color-night)" strokeWidth={3} />
             </button>
-            <div className="glass border-2 border-white/8 rounded-[2rem] p-6 shadow-[0_24px_48px_rgba(0,0,0,0.6)]">
+            <div className="glass border-[3px] border-(--color-night) rounded-[2rem] p-6 shadow-[6px_6px_0_#0F2226]">
             <div className="text-center mb-7">
               <div className="text-5xl mb-4">🔑</div>
-              <h2 className="text-3xl font-black text-white mb-2">Recuperar senha</h2>
+              <h2 className="font-display text-3xl text-(--color-night) mb-2">Recuperar senha</h2>
               <p className="text-gray-500 text-sm font-bold">Digite seu email e enviaremos as instruções.</p>
             </div>
             {success ? (
@@ -242,7 +242,7 @@ export function Auth() {
             ) : (
               <form onSubmit={handleForgot} className="flex flex-col gap-4">
                 <input name="email" type="email" placeholder="Seu email" required className={inputCls} />
-                {error && <div className="flex items-start gap-3 bg-red-950/80 border border-red-500/30 rounded-2xl px-4 py-3"><AlertCircle size={18} className="text-red-400 shrink-0 mt-0.5" /><p className="text-red-300 font-bold text-sm">{error}</p></div>}
+                {error && <div className="flex items-start gap-3 bg-[#EDBDB5] border-[3px] border-(--color-night) rounded-2xl px-4 py-3"><AlertCircle size={18} className="text-(--color-night) shrink-0 mt-0.5" /><p className="text-(--color-night) font-semibold text-sm">{error}</p></div>}
                 <button type="submit" disabled={loading} className="btn-base btn-primary w-full py-5 disabled:opacity-50">{loading ? 'ENVIANDO...' : 'ENVIAR INSTRUÇÕES'}</button>
               </form>
             )}
@@ -255,10 +255,10 @@ export function Auth() {
           <motion.div key="reset"
             initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
             className="w-full max-w-sm mx-auto px-4">
-            <div className="glass border-2 border-white/8 rounded-[2rem] p-6 shadow-[0_24px_48px_rgba(0,0,0,0.6)]">
+            <div className="glass border-[3px] border-(--color-night) rounded-[2rem] p-6 shadow-[6px_6px_0_#0F2226]">
             <div className="text-center mb-7">
               <div className="text-5xl mb-4">🔒</div>
-              <h2 className="text-3xl font-black text-white mb-2">Nova senha</h2>
+              <h2 className="font-display text-3xl text-(--color-night) mb-2">Nova senha</h2>
               <p className="text-gray-500 text-sm font-bold">Defina uma nova senha segura.</p>
             </div>
             {success ? (
@@ -271,7 +271,7 @@ export function Auth() {
               <form onSubmit={handleReset} className="flex flex-col gap-4">
                 <input name="password" type="password" placeholder="Nova senha" required minLength={6} className={inputCls} />
                 <input name="confirm" type="password" placeholder="Confirmar nova senha" required minLength={6} className={inputCls} />
-                {error && <div className="flex items-start gap-3 bg-red-950/80 border border-red-500/30 rounded-2xl px-4 py-3"><AlertCircle size={18} className="text-red-400 shrink-0 mt-0.5" /><p className="text-red-300 font-bold text-sm">{error}</p></div>}
+                {error && <div className="flex items-start gap-3 bg-[#EDBDB5] border-[3px] border-(--color-night) rounded-2xl px-4 py-3"><AlertCircle size={18} className="text-(--color-night) shrink-0 mt-0.5" /><p className="text-(--color-night) font-semibold text-sm">{error}</p></div>}
                 <button type="submit" disabled={loading} className="btn-base btn-primary w-full py-5 disabled:opacity-50">{loading ? 'SALVANDO...' : 'SALVAR NOVA SENHA'}</button>
               </form>
             )}

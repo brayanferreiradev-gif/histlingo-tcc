@@ -17,8 +17,8 @@ function NavItem({ href, icon: Icon, label }: { href: string; icon: any; label: 
     <Link href={href} onClick={() => sfx.nav()} className={`
       flex items-center gap-3 w-full py-3 px-4 rounded-2xl font-black text-sm tracking-widest uppercase transition-all border-2
       ${isActive
-        ? 'bg-(--color-primary)/15 text-(--color-primary) border-(--color-primary)/40 shadow-[0_0_16px_rgba(0,214,100,0.2),inset_0_0_12px_rgba(0,214,100,0.05)]'
-        : 'text-gray-400 border-transparent hover:bg-white/5 hover:text-white hover:border-white/10'}
+        ? 'bg-(--color-secondary) text-(--color-night) border-(--color-night) shadow-[3px_3px_0_#0F2226] -translate-x-px -translate-y-px'
+        : 'text-(--color-night) border-transparent hover:bg-(--color-chart)'}
     `}>
       <Icon size={24} strokeWidth={2.5} className="shrink-0" />
       <span className="hidden lg:block">{label}</span>
@@ -32,17 +32,17 @@ export function Sidebar() {
   return (
     <nav className="
       fixed bottom-0 left-0 right-0 z-50
-      bg-(--color-background)/95 backdrop-blur-md border-t-2 border-(--color-border)
+      bg-(--color-paper) border-t-[3px] border-(--color-night)
       flex items-center justify-around px-2 py-2
       lg:sticky lg:top-0 lg:bottom-auto lg:left-auto lg:right-auto lg:z-auto
       lg:w-64 lg:h-screen lg:flex-col lg:justify-between lg:items-stretch
-      lg:border-t-0 lg:border-r-2 lg:px-4 lg:py-6 lg:shrink-0
-      lg:bg-[#060A10]/95
+      lg:border-t-0 lg:border-r-[3px] lg:px-4 lg:py-6 lg:shrink-0
+      lg:bg-(--color-paper)
     ">
       {/* Logo (desktop only) */}
       <div className="hidden lg:flex items-center gap-3 px-4 mb-6 shrink-0">
-        <Avatar value="px:1" size={38} className="shadow-neo-primary" />
-        <span className="text-(--color-primary) font-black text-2xl tracking-tight">HistLingo</span>
+        <Avatar value="px:1" size={38} className="border-[3px] border-(--color-night)" />
+        <span className="font-display text-(--color-night) text-2xl">HistLingo</span>
       </div>
 
       {/* Nav links */}
@@ -54,16 +54,16 @@ export function Sidebar() {
       <div className="hidden lg:flex flex-col gap-3 shrink-0">
         {/* User info */}
         {user && (
-          <div className="flex items-center gap-3 px-4 py-3 bg-(--color-card) rounded-2xl border-2 border-(--color-primary)/20 shadow-[0_0_12px_rgba(0,214,100,0.08)]">
+          <div className="flex items-center gap-3 px-4 py-3 bg-(--color-chart) rounded-2xl border-[3px] border-(--color-night)">
             <Avatar value={user.avatarEmoji} size={40} />
             <div className="flex-1 min-w-0">
-              <p className="font-black text-white text-sm truncate">{user.username}</p>
-              <p className="text-gray-500 text-xs font-bold truncate">{user.xpTotal.toLocaleString()} XP</p>
+              <p className="font-black text-(--color-night) text-sm truncate">{user.username}</p>
+              <p className="text-(--color-mute) font-mono text-xs truncate">{user.xpTotal.toLocaleString()} XP</p>
             </div>
           </div>
         )}
         <button onClick={logout}
-          className="flex items-center gap-3 w-full py-3 px-4 rounded-2xl font-black text-sm tracking-widest uppercase text-gray-500 border-2 border-transparent hover:bg-red-900/20 hover:text-red-400 hover:border-red-500/20 transition-all">
+          className="flex items-center gap-3 w-full py-3 px-4 rounded-2xl font-black text-sm tracking-widest uppercase text-(--color-mute) border-2 border-transparent hover:bg-(--color-destructive) hover:text-white transition-all">
           <LogOut size={22} strokeWidth={2.5} className="shrink-0" />
           <span>Sair</span>
         </button>

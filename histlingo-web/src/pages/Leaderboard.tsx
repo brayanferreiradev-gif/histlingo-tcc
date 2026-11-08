@@ -6,14 +6,14 @@ import { useAuth } from "../lib/AuthContext"
 import { Avatar } from "../components/Avatar"
 
 const LEAGUE_COLORS: Record<string, { text: string; bg: string; icon: string; glow: string; gradient: string }> = {
-  'Bronze':   { text: 'text-amber-500', bg: 'bg-gradient-to-r from-amber-900/50 to-amber-800/30', icon: '🥉', glow: 'shadow-[0_0_24px_rgba(217,119,6,0.3)]', gradient: 'from-amber-900/60 to-amber-800/40' },
-  'Prata':    { text: 'text-gray-300', bg: 'bg-gradient-to-r from-gray-700/50 to-gray-600/30', icon: '🥈', glow: 'shadow-[0_0_24px_rgba(156,163,175,0.25)]', gradient: 'from-gray-700/60 to-gray-600/40' },
-  'Ouro':     { text: 'text-yellow-400', bg: 'bg-gradient-to-r from-yellow-900/50 to-yellow-800/30', icon: '🥇', glow: 'shadow-[0_0_24px_rgba(234,179,8,0.35)]', gradient: 'from-yellow-900/60 to-yellow-800/40' },
-  'Diamante': { text: 'text-cyan-400', bg: 'bg-gradient-to-r from-cyan-900/50 to-cyan-800/30', icon: '💎', glow: 'shadow-[0_0_24px_rgba(34,211,238,0.35)]', gradient: 'from-cyan-900/60 to-cyan-800/40' },
-  'Mestre':   { text: 'text-purple-400', bg: 'bg-gradient-to-r from-purple-900/50 to-purple-800/30', icon: '👑', glow: 'shadow-[0_0_24px_rgba(168,85,247,0.4)]', gradient: 'from-purple-900/60 to-purple-800/40' },
+  'Bronze':   { text: 'text-[#8E5320]', bg: 'bg-[#E39A5C]', icon: '🥉', glow: '', gradient: '' },
+  'Prata':    { text: 'text-[#4F6468]', bg: 'bg-[#C3CFD6]', icon: '🥈', glow: '', gradient: '' },
+  'Ouro':     { text: 'text-[#8A6417]', bg: 'bg-[#E0B04A]', icon: '🥇', glow: '', gradient: '' },
+  'Diamante': { text: 'text-[#2A6A86]', bg: 'bg-[#8FB6D6]', icon: '💎', glow: '', gradient: '' },
+  'Mestre':   { text: 'text-[#5B4A94]', bg: 'bg-[#BBAADC]', icon: '👑', glow: '', gradient: '' },
 }
 
-const RANK_COLORS = ['text-yellow-400', 'text-gray-300', 'text-amber-600']
+const RANK_COLORS = ['text-[#8A6417]', 'text-[#4F6468]', 'text-[#8E5320]']
 
 export function Leaderboard() {
   const { user } = useAuth()
@@ -38,12 +38,12 @@ export function Leaderboard() {
     <div className="flex flex-col w-full max-w-[600px] mx-auto pb-24">
       {/* League Banner */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}
-        className={`${league.bg} border-2 border-current ${league.text} ${league.glow} rounded-[2rem] p-6 mb-8 flex items-center gap-6`}>
+        className={`${league.bg} border-[3px] border-(--color-night) text-(--color-night) shadow-[6px_6px_0_#0F2226] rounded-[2rem] p-6 mb-8 flex items-center gap-6`}>
         <span className="text-6xl">{league.icon}</span>
         <div>
-          <p className="text-sm font-black uppercase tracking-widest opacity-70 mb-1">Sua liga atual</p>
-          <h2 className={`text-4xl font-black ${league.text}`}>Liga {myLeague}</h2>
-          <p className="text-sm font-bold opacity-70 mt-1">
+          <p className="text-xs font-mono uppercase tracking-widest mb-1">Sua liga atual</p>
+          <h2 className="font-display text-4xl">Liga {myLeague}</h2>
+          <p className="text-sm font-semibold mt-1">
             {myLeague === 'Bronze' && 'Ganhe 500 XP para subir para Prata'}
             {myLeague === 'Prata' && 'Ganhe 2000 XP para subir para Ouro'}
             {myLeague === 'Ouro' && 'Ganhe 5000 XP para subir para Diamante'}
@@ -66,11 +66,10 @@ export function Leaderboard() {
                 transition={{ delay: idx * 0.1 }}
                 className={`flex-1 flex flex-col items-center ${isMe ? 'scale-105' : ''}`}>
                 <div className="mb-1"><Avatar value={e.avatarEmoji} size={56} ring={isMe} /></div>
-                <p className="text-white font-black text-sm mb-2 truncate max-w-[80px] text-center">{e.username}</p>
-                <p className="text-(--color-secondary) font-black text-sm mb-1">{e.xpTotal.toLocaleString()} XP</p>
-                <div className={`w-full ${podiumH[idx]} rounded-t-2xl flex items-start justify-center pt-2 border-t-4 ${
-                  idx === 0 ? 'bg-gradient-to-b from-yellow-800/50 to-yellow-900/20 border-yellow-400 shadow-[0_0_16px_rgba(234,179,8,0.3)]' :
-                  idx === 1 ? 'bg-gradient-to-b from-gray-600/50 to-gray-700/20 border-gray-400 shadow-[0_0_12px_rgba(156,163,175,0.2)]' : 'bg-gradient-to-b from-amber-700/50 to-amber-900/20 border-amber-500 shadow-[0_0_12px_rgba(217,119,6,0.25)]'
+                <p className="text-white font-black text-sm mb-2 truncate max-w-[80px] text-center [text-shadow:2px_2px_0_#0F2226]">{e.username}</p>
+                <p className="text-(--color-secondary) font-mono text-sm mb-1 [text-shadow:2px_2px_0_#0F2226]">{e.xpTotal.toLocaleString()} XP</p>
+                <div className={`w-full ${podiumH[idx]} rounded-t-2xl flex items-start justify-center pt-2 border-[3px] border-b-0 border-(--color-night) ${
+                  idx === 0 ? 'bg-[#E0B04A]' : idx === 1 ? 'bg-[#C3CFD6]' : 'bg-[#E39A5C]'
                 }`}>
                   <span className="text-2xl font-black">{['🥇','🥈','🥉'][idx]}</span>
                 </div>
@@ -84,10 +83,10 @@ export function Leaderboard() {
       <div className="flex flex-col gap-2">
         {loading ? (
           Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="bg-(--color-card) rounded-2xl p-4 animate-pulse h-16 border border-(--color-border)"></div>
+            <div key={i} className="bg-(--color-card) rounded-2xl p-4 animate-pulse h-16 border-[3px] border-(--color-night)"></div>
           ))
         ) : entries.length === 0 ? (
-          <div className="text-center py-16 text-gray-400">
+          <div className="text-center py-16 text-white/80">
             <Trophy size={48} className="mx-auto mb-4 opacity-30" />
             <p className="font-bold">Nenhum jogador ainda. Seja o primeiro!</p>
           </div>
@@ -98,8 +97,8 @@ export function Leaderboard() {
             return (
               <motion.div key={entry.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all ${
-                  isMe ? 'border-(--color-primary) bg-(--color-primary)/10 shadow-neo-primary' : 'border-(--color-border) bg-(--color-card)'
+                className={`flex items-center gap-4 p-4 rounded-2xl border-[3px] border-(--color-night) shadow-[4px_4px_0_#0F2226] transition-all ${
+                  isMe ? 'bg-(--color-secondary)' : 'bg-(--color-card)'
                 }`}>
                 <span className={`text-xl font-black w-8 text-center ${i < 3 ? RANK_COLORS[i] : 'text-gray-500'}`}>
                   {i < 3 ? ['🥇', '🥈', '🥉'][i] : `${i + 1}`}
@@ -107,22 +106,22 @@ export function Leaderboard() {
                 <Avatar value={entry.avatarEmoji} size={44} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className={`font-black truncate ${isMe ? 'text-white' : 'text-gray-200'}`}>{entry.username}</p>
-                    {isMe && <span className="text-xs bg-(--color-primary) text-white px-2 py-0.5 rounded-full font-black">VOCÊ</span>}
+                    <p className="font-black truncate text-(--color-night)">{entry.username}</p>
+                    {isMe && <span className="text-xs bg-(--color-primary) text-white border-2 border-(--color-night) px-2 py-0.5 rounded-full font-mono">VOCÊ</span>}
                   </div>
                   <div className="flex items-center gap-3 mt-0.5">
                     <span className={`text-xs font-bold ${leagueInfo.text}`}>{leagueInfo.icon} {entry.league}</span>
-                    <span className="text-xs text-gray-500 font-bold">Nível {entry.level}</span>
+                    <span className="text-xs text-(--color-mute) font-mono">Nível {entry.level}</span>
                     {entry.streakCount > 0 && (
-                      <span className="flex items-center gap-1 text-xs text-orange-400 font-bold">
+                      <span className="flex items-center gap-1 text-xs text-[#A5551C] font-bold">
                         <Flame size={12} />{entry.streakCount}
                       </span>
                     )}
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-(--color-secondary) font-black">{entry.xpTotal.toLocaleString()}</p>
-                  <p className="text-gray-500 text-xs font-bold">XP</p>
+                  <p className="text-(--color-night) font-mono font-medium">{entry.xpTotal.toLocaleString()}</p>
+                  <p className="text-(--color-mute) text-xs font-mono">XP</p>
                 </div>
               </motion.div>
             )

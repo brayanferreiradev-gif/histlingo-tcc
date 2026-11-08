@@ -51,7 +51,7 @@ export function QuizCompanion({ moduleNum, name, state, message, bubbleClass, na
         initial={{ opacity: 0, y: 8, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ type: "spring", stiffness: 380, damping: 24 }}
-        className={`flex-1 min-w-0 border-2 px-4 py-3 rounded-[1.25rem] rounded-bl-sm text-sm md:text-base font-bold text-white leading-snug ${bubbleClass}`}
+        className={`flex-1 min-w-0 border-[3px] px-4 py-3 rounded-[1.25rem] rounded-bl-sm text-sm md:text-base font-semibold leading-snug ${bubbleClass}`}
       >
         {message}
       </motion.div>

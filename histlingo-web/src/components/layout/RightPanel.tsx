@@ -37,24 +37,24 @@ export function RightPanel() {
     <aside className="flex flex-col gap-5 px-5 py-6 w-full">
 
       {/* User stats */}
-      <div className="bg-(--color-card) border-2 border-(--color-border) rounded-3xl p-5 shadow-neo-card">
+      <div className="bg-(--color-card) border-2 border-(--color-border) rounded-3xl p-5 shadow-neo-card border-[3px]">
         <div className="flex items-center gap-3 mb-4">
           <Avatar value={user.avatarEmoji} size={52} />
           <div className="flex-1 min-w-0">
-            <p className="font-black text-white truncate">{user.username}</p>
+            <p className="font-black truncate">{user.username}</p>
             <p className="text-xs text-gray-400 font-bold">Nível {user.level} · {LEAGUE_ICONS[league]} {league}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="bg-(--color-background) rounded-2xl p-3 text-center border border-(--color-border)">
+          <div className="bg-(--color-chart) rounded-2xl p-3 text-center border-2 border-(--color-night)">
             <div className="flex items-center justify-center gap-1.5 mb-1">
               <Star size={15} fill="#FFD700" color="#D4B200" />
               <span className="text-yellow-400 font-black text-sm">{user.xpTotal.toLocaleString('pt-BR')}</span>
             </div>
             <p className="text-gray-500 text-xs font-bold">XP Total</p>
           </div>
-          <div className="bg-(--color-background) rounded-2xl p-3 text-center border border-(--color-border)">
+          <div className="bg-(--color-chart) rounded-2xl p-3 text-center border-2 border-(--color-night)">
             <div className="flex items-center justify-center gap-1.5 mb-1">
               <Flame size={15} fill={user.streakCount > 0 ? "#FF9500" : "#374151"} color={user.streakCount > 0 ? "#FF7A00" : "#374151"} />
               <span className={`font-black text-sm ${user.streakCount > 0 ? 'text-orange-400' : 'text-gray-600'}`}>{user.streakCount}</span>
@@ -69,7 +69,7 @@ export function RightPanel() {
               <span>{LEAGUE_ICONS[league]} {league}</span>
               <span>{LEAGUE_ICONS[nextName[league]]} {nextName[league]}</span>
             </div>
-            <div className="h-2.5 bg-(--color-background) rounded-full border border-(--color-border) overflow-hidden">
+            <div className="h-3 bg-(--color-chart) rounded-full border-2 border-(--color-night) overflow-hidden">
               <div className="h-full bg-(--color-secondary) rounded-full" style={{ width: `${progress}%` }} />
             </div>
             <p className="text-right text-xs text-gray-600 font-bold mt-1">{user.xpTotal.toLocaleString()} / {nextXP.toLocaleString()} XP</p>
@@ -78,13 +78,13 @@ export function RightPanel() {
       </div>
 
       {/* Top players */}
-      <div className="bg-(--color-card) border-2 border-(--color-border) rounded-3xl p-5 shadow-neo-card">
+      <div className="bg-(--color-card) border-2 border-(--color-border) rounded-3xl p-5 shadow-neo-card border-[3px]">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
-            <Trophy size={17} className="text-(--color-secondary)" />
-            <h3 className="font-black text-white text-sm">Top Jogadores</h3>
+            <Trophy size={17} className="text-(--color-night)" />
+            <h3 className="font-display text-(--color-night) text-base">Top Jogadores</h3>
           </div>
-          <Link href="/leaderboard" className="text-(--color-primary) font-black text-xs uppercase tracking-widest hover:brightness-110">Ver tudo</Link>
+          <Link href="/leaderboard" className="text-(--color-night) bg-(--color-secondary) border-2 border-(--color-night) rounded-lg px-2 py-0.5 font-mono text-[11px] uppercase tracking-widest hover:brightness-110">Ver tudo</Link>
         </div>
 
         <div className="flex flex-col gap-2.5">
@@ -95,11 +95,11 @@ export function RightPanel() {
             const isMe = entry.id === user.id
             const medals = ['🥇', '🥈', '🥉']
             return (
-              <div key={entry.id} className={`flex items-center gap-2.5 px-2 py-2 rounded-2xl ${isMe ? 'bg-(--color-primary)/10 border border-(--color-primary)/20' : ''}`}>
+              <div key={entry.id} className={`flex items-center gap-2.5 px-2 py-2 rounded-2xl ${isMe ? 'bg-(--color-secondary) border-2 border-(--color-night)' : ''}`}>
                 <span className="text-base w-6 text-center shrink-0">{i < 3 ? medals[i] : `${i + 1}`}</span>
                 <Avatar value={entry.avatarEmoji} size={32} />
                 <div className="flex-1 min-w-0">
-                  <p className={`font-black text-xs truncate ${isMe ? 'text-(--color-primary)' : 'text-white'}`}>
+                  <p className={`font-black text-xs truncate ${'text-(--color-night)'}`}>
                     {entry.username}{isMe ? ' (você)' : ''}
                   </p>
                   <p className="text-gray-500 text-xs font-bold">{entry.xpTotal.toLocaleString()} XP</p>
@@ -110,7 +110,7 @@ export function RightPanel() {
         </div>
       </div>
 
-      <div className="mt-auto pt-3 text-[10px] text-gray-600 font-bold uppercase tracking-widest">
+      <div className="mt-auto pt-3 text-[10px] text-white/70 font-mono uppercase tracking-widest">
         <p>© 2026 HistLingo · IFRS Farroupilha</p>
       </div>
     </aside>

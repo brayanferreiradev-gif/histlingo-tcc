@@ -296,7 +296,7 @@ function EntryCard({ entry }: { entry: WikiEntry }) {
       layout
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`bg-(--color-card) border-2 border-(--color-border) rounded-3xl overflow-hidden hover:border-white/20 transition-all border-l-4 ${
+      className={`bg-(--color-card) border-[3px] border-(--color-night) shadow-[4px_4px_0_#0F2226] rounded-3xl overflow-hidden hover:-translate-y-0.5 transition-all border-l-[10px] ${
         entry.periodColor === 'emerald' ? 'border-l-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]' :
         entry.periodColor === 'amber' ? 'border-l-amber-500 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)]' :
         entry.periodColor === 'purple' ? 'border-l-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)]' :
@@ -390,26 +390,26 @@ export function Wiki() {
 
       {/* Header */}
       <div className="text-center pt-2 pb-1">
-        <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-2">
-          Wiki <span className="text-(--color-primary)">Histórica</span>
+        <h1 className="font-display text-3xl md:text-4xl text-white mb-2 [text-shadow:4px_4px_0_#0F2226]">
+          Wiki <span className="text-(--color-secondary)">Histórica</span>
         </h1>
-        <p className="text-gray-400 font-bold text-sm md:text-base max-w-md mx-auto">
+        <p className="text-white/85 font-medium text-sm md:text-base max-w-md mx-auto">
           História do Brasil de ponta a ponta — do pré-colonial até a Nova República
         </p>
       </div>
 
       {/* Search */}
       <div className="relative">
-        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" strokeWidth={2.5} />
+        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-(--color-mute)" strokeWidth={2.5} />
         <input
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Buscar personagem, evento, lei..."
-          className="w-full bg-(--color-card) border-2 border-(--color-border) pl-11 pr-5 py-3.5 rounded-2xl text-sm font-bold text-white placeholder:text-gray-600 outline-none focus:border-(--color-primary) transition-colors"
+          className="w-full bg-(--color-paper) border-[3px] border-(--color-night) shadow-[4px_4px_0_#0F2226] pl-11 pr-5 py-3.5 rounded-2xl text-sm font-semibold text-(--color-night) placeholder:text-(--color-mute) outline-none focus:bg-white transition-colors"
         />
         {search && (
-          <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white">
+          <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-(--color-mute) hover:text-(--color-night)">
             ✕
           </button>
         )}
@@ -419,10 +419,10 @@ export function Wiki() {
       <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
         {PERIODS.map(p => (
           <button key={p} onClick={() => setActivePeriod(p)}
-            className={`shrink-0 px-3 py-2 rounded-xl text-xs font-black uppercase tracking-widest border-2 transition-all ${
+            className={`shrink-0 px-3 py-2 rounded-xl text-xs font-mono uppercase tracking-widest border-[3px] border-(--color-night) transition-all ${
               activePeriod === p
-                ? 'bg-gradient-to-r from-(--color-primary) to-(--color-accent) text-white border-transparent shadow-[0_0_12px_rgba(0,214,100,0.3)]'
-                : 'text-gray-400 border-(--color-border) hover:border-white/20 hover:text-white'
+                ? 'bg-(--color-secondary) text-(--color-night) shadow-[3px_3px_0_#0F2226]'
+                : 'bg-(--color-paper) text-(--color-night) hover:bg-(--color-chart)'
             }`}>
             {p}
           </button>
@@ -430,14 +430,14 @@ export function Wiki() {
       </div>
 
       {/* Count */}
-      <p className="text-xs font-black text-gray-600 uppercase tracking-widest -mt-2">
+      <p className="text-xs font-mono text-white/75 uppercase tracking-widest -mt-2">
         {filtered.length} {filtered.length === 1 ? 'artigo encontrado' : 'artigos encontrados'}
       </p>
 
       {/* Entries */}
       <div className="flex flex-col gap-3">
         {filtered.length === 0 ? (
-          <div className="text-center py-16 text-gray-500">
+          <div className="text-center py-16 text-white/80">
             <BookOpen size={48} className="mx-auto mb-4 opacity-30" />
             <p className="font-black text-lg">Nenhum resultado encontrado.</p>
             <p className="font-bold text-sm mt-1">Tente outra palavra-chave ou período.</p>
@@ -448,7 +448,7 @@ export function Wiki() {
       </div>
 
       {/* Footer note */}
-      <div className="bg-(--color-card) border-2 border-(--color-border) rounded-2xl p-4 text-center">
+      <div className="bg-(--color-card) border-[3px] border-(--color-night) shadow-[4px_4px_0_#0F2226] rounded-2xl p-4 text-center">
         <p className="text-xs font-bold text-gray-500">
           📚 Conteúdo baseado em fontes históricas verificadas · IFRS Farroupilha · HistLingo TCC 2026
         </p>

@@ -17,7 +17,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const title = PAGE_TITLES[location] || 'HistLingo'
 
   return (
-    <div className="flex min-h-screen bg-(--color-background)">
+    <div className="flex min-h-screen">
       {/* Left sidebar — lg+ */}
       <Sidebar />
 
@@ -25,12 +25,12 @@ export function AppLayout({ children }: { children: ReactNode }) {
       <div className="flex flex-1 flex-col min-w-0">
 
         {/* Top header — always visible on all screen sizes */}
-        <header className="sticky top-0 z-40 bg-[#060A10]/95 backdrop-blur-lg border-b-2 border-(--color-border) shadow-[0_2px_20px_rgba(0,0,0,0.4)] flex items-center justify-between px-4 lg:px-8 h-14 shrink-0">
+        <header className="sticky top-0 z-40 bg-(--color-paper) border-b-[3px] border-(--color-night) flex items-center justify-between px-4 lg:px-8 h-14 shrink-0">
           {/* Mobile: app logo. Desktop: page title (sidebar already has the logo) */}
-          <span className="text-xl font-black text-(--color-primary) tracking-tighter select-none lg:hidden">
+          <span className="font-display text-xl text-(--color-night) select-none lg:hidden">
             HistLingo
           </span>
-          <h1 className="hidden lg:block text-xl font-black text-white tracking-tight">
+          <h1 className="hidden lg:block font-display text-xl text-(--color-night)">
             {title}
           </h1>
           <HeaderStats />
@@ -53,7 +53,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       </div>
 
       {/* Right panel — xl+ */}
-      <aside className="hidden xl:flex w-[300px] 2xl:w-[320px] shrink-0 sticky top-0 h-screen overflow-y-auto no-scrollbar border-l-2 border-(--color-border)">
+      <aside className="hidden xl:flex w-[300px] 2xl:w-[320px] shrink-0 sticky top-0 h-screen overflow-y-auto no-scrollbar border-l-[3px] border-(--color-night) bg-black/10">
         <RightPanel />
       </aside>
     </div>

@@ -12,7 +12,7 @@ import { PixelChar } from "./components/PixelChar"
 
 function ServerDownScreen() {
   return (
-    <div className="fixed inset-0 bg-[#060C12] flex flex-col items-center justify-center p-8 text-center gap-6">
+    <div className="fixed inset-0 bg-(--color-background) flex flex-col items-center justify-center p-8 text-center gap-6">
       <motion.div
         animate={{ rotate: [0, 6, -6, 0] }}
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
@@ -45,7 +45,7 @@ function AppRoutes() {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 bg-[#0A1118] flex items-center justify-center">
+      <div className="fixed inset-0 bg-(--color-background) flex items-center justify-center">
         <motion.div animate={{ y: [0, -26, 0] }} transition={{ repeat: Infinity, duration: 0.7, ease: "easeOut" }}><PixelChar char={1} pose="jump" scale={4} animate={false} /></motion.div>
       </div>
     )
