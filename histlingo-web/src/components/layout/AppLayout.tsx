@@ -1,3 +1,4 @@
+import { LogoMark } from "../Logo"
 import { HeaderStats } from "./HeaderStats"
 import { Sidebar } from "./Sidebar"
 import { RightPanel } from "./RightPanel"
@@ -28,7 +29,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
         {/* Top header — always visible on all screen sizes */}
         <header className="sticky top-0 z-40 bg-(--color-paper) border-b-[3px] border-(--color-night) flex items-center justify-between px-4 lg:px-8 h-14 shrink-0">
           {/* Mobile: app logo. Desktop: page title (sidebar already has the logo) */}
-          <span className="font-display text-xl text-(--color-night) select-none lg:hidden">
+          <span className="flex items-center gap-2 font-display text-xl text-(--color-night) select-none lg:hidden">
+            <LogoMark size={32} />
             HistLingo
           </span>
           <h1 className="hidden lg:block font-display text-xl text-(--color-night)">

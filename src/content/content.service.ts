@@ -12,6 +12,7 @@ export class ContentService implements OnModuleInit {
     try {
       pool = createPool(this.mysqlConfig());
       await this.ensureOwnerColumn(pool);
+      await pool.query("UPDATE modules SET title = 'Conquista e dominação' WHERE `order` = 2 AND title = 'O Encontro e o Choque'");
       const [rows] = await pool.query('SELECT COUNT(*) as cnt FROM lessons') as any[];
       const count = Number(rows[0].cnt);
       if (count < 30) await this.seedContent(pool);
@@ -51,7 +52,7 @@ export class ContentService implements OnModuleInit {
   private async seedContent(pool: Pool) {
     const modulesData = [
       { order: 1, title: 'Raízes Profundas', description: 'Povos Originários: Cultura indígena antes de 1500, troncos linguísticos, organização social e mitologias.' },
-      { order: 2, title: 'O Encontro e o Choque', description: 'Período Colonial Inicial: Chegada dos portugueses, ciclos econômicos (pau-brasil, açúcar) e resistência indígena/africana.' },
+      { order: 2, title: 'Conquista e dominação', description: 'Período Colonial Inicial: Chegada dos portugueses, ciclos econômicos (pau-brasil, açúcar) e resistência indígena/africana.' },
       { order: 3, title: 'Brasil Império', description: 'Independência e Monarquia: A vinda da Família Real, D. Pedro I e II, Abolição e a transição para a República.' },
       { order: 4, title: 'Ordem e Progresso?', description: 'República Velha e Era Vargas: Coronelismo, movimentos sociais (Canudos, Vacina) e a industrialização.' },
       { order: 5, title: 'Tempos Modernos', description: 'Ditadura e Redemocratização: O golpe de 64, movimentos de resistência, Diretas Já e a Constituição de 88.' },

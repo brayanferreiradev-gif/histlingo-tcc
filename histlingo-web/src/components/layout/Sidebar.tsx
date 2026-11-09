@@ -3,6 +3,7 @@ import { sfx } from "../../lib/sfx"
 import { Map, Trophy, User, Book, LogOut, GraduationCap } from "lucide-react"
 import { useAuth } from "../../lib/AuthContext"
 import { Avatar } from "../Avatar"
+import { LogoMark } from "../Logo"
 
 const NAV = [
   { href: "/", icon: Map, label: "Jornada" },
@@ -41,7 +42,7 @@ export function Sidebar() {
     ">
       {/* Logo (desktop only) */}
       <div className="hidden lg:flex items-center gap-3 px-4 mb-6 shrink-0">
-        <Avatar value="px:1" size={38} className="border-[3px] border-(--color-night)" />
+        <LogoMark size={44} />
         <span className="font-display text-(--color-night) text-2xl">HistLingo</span>
       </div>
 

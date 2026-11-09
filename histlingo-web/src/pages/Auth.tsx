@@ -6,6 +6,7 @@ import { auth } from "../lib/api"
 import { useSearch } from "wouter"
 import KineticGrid from "../components/ui/kinetic-grid"
 import { PixelChar } from "../components/PixelChar"
+import { LogoMark } from "../components/Logo"
 import { sfx } from "../lib/sfx"
 
 type Screen = 'landing' | 'register' | 'login' | 'forgot' | 'reset'
@@ -105,20 +106,13 @@ export function Auth() {
             transition={{ duration: 0.4 }}
             className="flex flex-col items-center text-center px-6 w-full max-w-xs sm:max-w-sm relative z-10">
 
-            <div className="flex items-end justify-center gap-0 sm:gap-1 mb-4 select-none">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <motion.div key={n}
-                  initial={{ y: -60, opacity: 0 }}
-                  animate={{ y: [0, -22, 0], opacity: 1 }}
-                  transition={{
-                    y: { repeat: Infinity, duration: 1.6, delay: 0.5 + n * 0.18, ease: "easeOut", repeatDelay: 1.4 },
-                    opacity: { delay: n * 0.1 },
-                  }}
-                  onAnimationStart={() => { if (n === 3) sfx.land() }}>
-                  <PixelChar char={n} pose="idle" scale={3} />
-                </motion.div>
-              ))}
-            </div>
+            <motion.div className="mb-4 select-none"
+              initial={{ y: -60, opacity: 0 }}
+              animate={{ y: [0, -18, 0], opacity: 1 }}
+              transition={{ y: { repeat: Infinity, duration: 1.6, delay: 0.6, ease: "easeOut", repeatDelay: 1.4 }, opacity: { duration: 0.4 } }}
+              onAnimationStart={() => sfx.land()}>
+              <LogoMark size={176} />
+            </motion.div>
 
             <h1 className="font-display text-white leading-none mb-1 [text-shadow:4px_4px_0_#0F2226]">
               <span className="text-5xl sm:text-6xl">Hist</span>
