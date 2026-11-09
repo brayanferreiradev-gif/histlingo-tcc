@@ -102,6 +102,8 @@ function PathNode({ status, position, href, isFirstActive, activeRef, moduleOrde
 
 let cache: { modules: Module[]; progress: string[] } | null = null
 
+export function invalidateHomeCache() { cache = null }
+
 export function Home() {
   useAuth()
   const [modules, setModules] = useState<Module[]>(cache?.modules ?? [])
@@ -186,7 +188,7 @@ export function Home() {
       {/* Path line */}
 
       {modules.map((mod, modIdx) => {
-        const colors = MODULE_COLORS[mod.order] || MODULE_COLORS[1]
+        const colors = MODULE_COLORS[((mod.order - 1) % 5) + 1]
         const lessons = mod.lessons || []
 
         const prevMod = modIdx > 0 ? modules[modIdx - 1] : null

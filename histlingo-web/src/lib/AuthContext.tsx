@@ -6,7 +6,7 @@ interface AuthContextValue {
   isLoading: boolean;
   serverDown: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string) => Promise<void>;
+  register: (username: string, email: string, password: string, teacherCode?: string) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -73,8 +73,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setServerDown(false);
   };
 
-  const register = async (username: string, email: string, password: string) => {
-    await auth.register(username, email, password);
+  const register = async (username: string, email: string, password: string, teacherCode?: string) => {
+    await auth.register(username, email, password, teacherCode);
     const me = await auth.me();
     setUser(me);
     setServerDown(false);

@@ -1,4 +1,5 @@
 import { Avatar, AVATAR_VALUES } from "../components/Avatar"
+import { PixelMedal } from "../components/PixelMedal"
 import { PixelChar, CHAR_META, type CharKey } from "../components/PixelChar"
 import { sfx } from "../lib/sfx"
 import { MedalsSection } from "../components/MedalsSection"
@@ -10,11 +11,11 @@ import { users } from "../lib/api"
 
 
 const LEAGUE_INFO: Record<string, { icon: string; color: string; next: string; nextXP: number }> = {
-  'Bronze':   { icon: '🥉', color: 'text-[#8E5320]', next: 'Prata', nextXP: 500 },
-  'Prata':    { icon: '🥈', color: 'text-[#4F6468]', next: 'Ouro', nextXP: 2000 },
-  'Ouro':     { icon: '🥇', color: 'text-[#8A6417]', next: 'Diamante', nextXP: 5000 },
-  'Diamante': { icon: '💎', color: 'text-[#2A6A86]', next: 'Mestre', nextXP: 10000 },
-  'Mestre':   { icon: '👑', color: 'text-[#5B4A94]', next: '', nextXP: Infinity },
+  'Bronze':   { icon: 'Bronze', color: 'text-[#8E5320]', next: 'Prata', nextXP: 500 },
+  'Prata':    { icon: 'Prata', color: 'text-[#4F6468]', next: 'Ouro', nextXP: 2000 },
+  'Ouro':     { icon: 'Ouro', color: 'text-[#8A6417]', next: 'Diamante', nextXP: 5000 },
+  'Diamante': { icon: 'Diamante', color: 'text-[#2A6A86]', next: 'Mestre', nextXP: 10000 },
+  'Mestre':   { icon: 'Mestre', color: 'text-[#5B4A94]', next: '', nextXP: Infinity },
 }
 
 function getLeague(xp: number) {
@@ -101,7 +102,7 @@ export function Profile() {
             )}
             <p className="text-(--color-mute) text-xs sm:text-sm font-semibold truncate">{localUser.email}</p>
             <div className="flex items-center gap-x-2 flex-wrap mt-2 text-sm">
-              <span className={`font-black ${leagueInfo.color}`}>{leagueInfo.icon} Liga {league}</span>
+              <span className={`font-black ${leagueInfo.color}`}><PixelMedal league={leagueInfo.icon} size={20} className="mr-1.5" />Liga {league}</span>
               <span className="text-(--color-mute)">·</span>
               <span className="text-(--color-mute) font-bold">Nível {localUser.level}</span>
             </div>

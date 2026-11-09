@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, AlertCircle, CheckCircle, ChevronRight } from "lucide-react"
+import { X, AlertCircle, CheckCircle, ChevronRight, KeyRound, Lock, GraduationCap } from "lucide-react"
 import { useAuth } from "../lib/AuthContext"
 import { auth } from "../lib/api"
 import { useSearch } from "wouter"
@@ -29,6 +29,7 @@ export function Auth() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [isTeacher, setIsTeacher] = useState(false)
 
   const reset = () => { setError(null); setSuccess(null) }
 
@@ -42,7 +43,8 @@ export function Auth() {
         await login(email, password)
       } else {
         const username = (form.elements.namedItem('username') as HTMLInputElement).value
-        await register(username, email, password)
+        const code = isTeacher ? (form.elements.namedItem('teacherCode') as HTMLInputElement).value : undefined
+        await register(username, email, password, code)
       }
     } catch (err: any) {
       setError(err.message || 'Erro desconhecido.')
@@ -184,6 +186,20 @@ export function Auth() {
               <input name="email" type="email" placeholder="Email" required className={inputCls} autoComplete="email" />
               <input name="password" type="password" placeholder="Senha" required minLength={6} className={inputCls} autoComplete={screen === 'login' ? 'current-password' : 'new-password'} />
 
+              {screen === 'register' && (
+                <>
+                  <button type="button" onClick={() => setIsTeacher(v => !v)}
+                    className={`flex items-center gap-3 text-left px-4 py-3 rounded-2xl border-[3px] border-(--color-night) font-bold text-sm transition-all ${isTeacher ? 'bg-(--color-secondary) shadow-[3px_3px_0_#0F2226]' : 'bg-(--color-chart)'} text-(--color-night)`}>
+                    <GraduationCap size={22} strokeWidth={2.5} className="shrink-0" />
+                    <span className="flex-1">Sou professor(a) e quero criar mapas</span>
+                    <span className={`w-5 h-5 rounded-md border-[3px] border-(--color-night) shrink-0 ${isTeacher ? 'bg-(--color-night)' : 'bg-white'}`} />
+                  </button>
+                  {isTeacher && (
+                    <input name="teacherCode" type="password" placeholder="Código de professor" required className={inputCls} autoComplete="off" />
+                  )}
+                </>
+              )}
+
               {error && (
                 <div className="flex items-start gap-3 bg-[#EDBDB5] border-[3px] border-(--color-night) rounded-2xl px-4 py-3">
                   <AlertCircle size={18} className="text-(--color-night) shrink-0 mt-0.5" />
@@ -229,7 +245,7 @@ export function Auth() {
             </button>
             <div className="glass border-[3px] border-(--color-night) rounded-[2rem] p-6 shadow-[6px_6px_0_#0F2226]">
             <div className="text-center mb-7">
-              <div className="text-5xl mb-4">🔑</div>
+              <div className="flex justify-center mb-4 text-(--color-night)"><KeyRound size={48} strokeWidth={2.5} /></div>
               <h2 className="font-display text-3xl text-(--color-night) mb-2">Recuperar senha</h2>
               <p className="text-gray-500 text-sm font-bold">Digite seu email e enviaremos as instruções.</p>
             </div>
@@ -257,7 +273,7 @@ export function Auth() {
             className="w-full max-w-sm mx-auto px-4">
             <div className="glass border-[3px] border-(--color-night) rounded-[2rem] p-6 shadow-[6px_6px_0_#0F2226]">
             <div className="text-center mb-7">
-              <div className="text-5xl mb-4">🔒</div>
+              <div className="flex justify-center mb-4 text-(--color-night)"><Lock size={48} strokeWidth={2.5} /></div>
               <h2 className="font-display text-3xl text-(--color-night) mb-2">Nova senha</h2>
               <p className="text-gray-500 text-sm font-bold">Defina uma nova senha segura.</p>
             </div>

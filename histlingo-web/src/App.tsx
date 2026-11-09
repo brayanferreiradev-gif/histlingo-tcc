@@ -7,6 +7,7 @@ import { Auth } from "./pages/Auth"
 import { Leaderboard } from "./pages/Leaderboard"
 import { Profile } from "./pages/Profile"
 import { Wiki } from "./pages/Wiki"
+import { Teacher } from "./pages/Teacher"
 import { motion } from "framer-motion"
 import { PixelChar } from "./components/PixelChar"
 
@@ -79,6 +80,7 @@ function AppRoutes() {
             <Route path="/leaderboard" component={Leaderboard} />
             <Route path="/profile" component={Profile} />
             <Route path="/wiki" component={Wiki} />
+            <Route path="/professor" component={Teacher} />
           </Switch>
         </AppLayout>
       </Route>

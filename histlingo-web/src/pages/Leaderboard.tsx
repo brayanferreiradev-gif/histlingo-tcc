@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { PixelMedal } from "../components/PixelMedal"
 import { motion } from "framer-motion"
 import { Flame, Trophy } from "lucide-react"
 import { users, LeaderboardEntry } from "../lib/api"
@@ -6,11 +7,11 @@ import { useAuth } from "../lib/AuthContext"
 import { Avatar } from "../components/Avatar"
 
 const LEAGUE_COLORS: Record<string, { text: string; bg: string; icon: string; glow: string; gradient: string }> = {
-  'Bronze':   { text: 'text-[#8E5320]', bg: 'bg-[#E39A5C]', icon: '🥉', glow: '', gradient: '' },
-  'Prata':    { text: 'text-[#4F6468]', bg: 'bg-[#C3CFD6]', icon: '🥈', glow: '', gradient: '' },
-  'Ouro':     { text: 'text-[#8A6417]', bg: 'bg-[#E0B04A]', icon: '🥇', glow: '', gradient: '' },
-  'Diamante': { text: 'text-[#2A6A86]', bg: 'bg-[#8FB6D6]', icon: '💎', glow: '', gradient: '' },
-  'Mestre':   { text: 'text-[#5B4A94]', bg: 'bg-[#BBAADC]', icon: '👑', glow: '', gradient: '' },
+  'Bronze':   { text: 'text-[#8E5320]', bg: 'bg-[#E39A5C]', icon: 'Bronze', glow: '', gradient: '' },
+  'Prata':    { text: 'text-[#4F6468]', bg: 'bg-[#C3CFD6]', icon: 'Prata', glow: '', gradient: '' },
+  'Ouro':     { text: 'text-[#8A6417]', bg: 'bg-[#E0B04A]', icon: 'Ouro', glow: '', gradient: '' },
+  'Diamante': { text: 'text-[#2A6A86]', bg: 'bg-[#8FB6D6]', icon: 'Diamante', glow: '', gradient: '' },
+  'Mestre':   { text: 'text-[#5B4A94]', bg: 'bg-[#BBAADC]', icon: 'Mestre', glow: '', gradient: '' },
 }
 
 const RANK_COLORS = ['text-[#8A6417]', 'text-[#4F6468]', 'text-[#8E5320]']
@@ -39,7 +40,7 @@ export function Leaderboard() {
       {/* League Banner */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}
         className={`${league.bg} border-[3px] border-(--color-night) text-(--color-night) shadow-[6px_6px_0_#0F2226] rounded-[2rem] p-6 mb-8 flex items-center gap-6`}>
-        <span className="text-6xl">{league.icon}</span>
+        <PixelMedal league={league.icon} size={72} />
         <div>
           <p className="text-xs font-mono uppercase tracking-widest mb-1">Sua liga atual</p>
           <h2 className="font-display text-4xl">Liga {myLeague}</h2>
@@ -71,7 +72,7 @@ export function Leaderboard() {
                 <div className={`w-full ${podiumH[idx]} rounded-t-2xl flex items-start justify-center pt-2 border-[3px] border-b-0 border-(--color-night) ${
                   idx === 0 ? 'bg-[#E0B04A]' : idx === 1 ? 'bg-[#C3CFD6]' : 'bg-[#E39A5C]'
                 }`}>
-                  <span className="text-2xl font-black">{['🥇','🥈','🥉'][idx]}</span>
+                  <PixelMedal rank={(idx + 1) as 1 | 2 | 3} size={32} />
                 </div>
               </motion.div>
             )
@@ -101,7 +102,7 @@ export function Leaderboard() {
                   isMe ? 'bg-(--color-secondary)' : 'bg-(--color-card)'
                 }`}>
                 <span className={`text-xl font-black w-8 text-center ${i < 3 ? RANK_COLORS[i] : 'text-gray-500'}`}>
-                  {i < 3 ? ['🥇', '🥈', '🥉'][i] : `${i + 1}`}
+                  {i < 3 ? <PixelMedal rank={(i + 1) as 1 | 2 | 3} size={28} /> : `${i + 1}`}
                 </span>
                 <Avatar value={entry.avatarEmoji} size={44} />
                 <div className="flex-1 min-w-0">
@@ -110,7 +111,7 @@ export function Leaderboard() {
                     {isMe && <span className="text-xs bg-(--color-primary) text-white border-2 border-(--color-night) px-2 py-0.5 rounded-full font-mono">VOCÊ</span>}
                   </div>
                   <div className="flex items-center gap-3 mt-0.5">
-                    <span className={`text-xs font-bold ${leagueInfo.text}`}>{leagueInfo.icon} {entry.league}</span>
+                    <span className={`text-xs font-bold ${leagueInfo.text}`}><PixelMedal league={leagueInfo.icon} size={16} className="mr-1" />{entry.league}</span>
                     <span className="text-xs text-(--color-mute) font-mono">Nível {entry.level}</span>
                     {entry.streakCount > 0 && (
                       <span className="flex items-center gap-1 text-xs text-[#A5551C] font-bold">

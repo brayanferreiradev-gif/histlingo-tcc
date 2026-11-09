@@ -33,10 +33,10 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export const auth = {
-  register: async (username: string, email: string, password: string) => {
+  register: async (username: string, email: string, password: string, teacherCode?: string) => {
     const data = await request<{ access_token: string }>('/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ username, email, password, ...(teacherCode ? { teacherCode } : {}) }),
     });
     setToken(data.access_token);
     return data;
@@ -75,6 +75,30 @@ export const content = {
   getLessons: (moduleId: string) => request<Lesson[]>(`/content/modules/${moduleId}/lessons`),
   getLesson: (lessonId: string) => request<Lesson>(`/content/lessons/${lessonId}`),
   getChallenges: (lessonId: string) => request<Challenge[]>(`/content/lessons/${lessonId}/challenges`),
+};
+
+const send = (method: string, path: string, body?: unknown) =>
+  request<{ id?: string; ok?: boolean }>(path, { method, body: body === undefined ? undefined : JSON.stringify(body) });
+
+export interface ChallengeInput {
+  type: Challenge['type'];
+  content: string;
+  options: string[];
+  correctAnswer: string;
+  explanation?: string;
+}
+
+/** Área do professor */
+export const teacher = {
+  createModule: (dto: { title: string; description?: string }) => send('POST', '/content/modules', dto),
+  updateModule: (id: string, dto: { title?: string; description?: string }) => send('PATCH', `/content/modules/${id}`, dto),
+  deleteModule: (id: string) => send('DELETE', `/content/modules/${id}`),
+  createLesson: (moduleId: string, dto: { title: string; content: string; xpReward?: number }) => send('POST', `/content/modules/${moduleId}/lessons`, dto),
+  updateLesson: (id: string, dto: { title?: string; content?: string; xpReward?: number }) => send('PATCH', `/content/lessons/${id}`, dto),
+  deleteLesson: (id: string) => send('DELETE', `/content/lessons/${id}`),
+  createChallenge: (lessonId: string, dto: ChallengeInput) => send('POST', `/content/lessons/${lessonId}/challenges`, dto),
+  updateChallenge: (id: string, dto: ChallengeInput) => send('PATCH', `/content/challenges/${id}`, dto),
+  deleteChallenge: (id: string) => send('DELETE', `/content/challenges/${id}`),
 };
 
 export const users = {
@@ -127,6 +151,7 @@ export interface Module {
   title: string;
   description: string | null;
   order: number;
+  ownerId?: string | null;
   lessons?: Lesson[];
 }
 

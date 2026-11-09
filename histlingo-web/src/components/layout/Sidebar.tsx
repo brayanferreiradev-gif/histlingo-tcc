@@ -1,6 +1,6 @@
 import { Link, useRoute } from "wouter"
 import { sfx } from "../../lib/sfx"
-import { Map, Trophy, User, Book, LogOut } from "lucide-react"
+import { Map, Trophy, User, Book, LogOut, GraduationCap } from "lucide-react"
 import { useAuth } from "../../lib/AuthContext"
 import { Avatar } from "../Avatar"
 
@@ -48,6 +48,7 @@ export function Sidebar() {
       {/* Nav links */}
       <div className="flex items-center justify-around w-full lg:flex-col lg:gap-1 lg:flex-1">
         {NAV.map(item => <NavItem key={item.href} {...item} />)}
+        {user?.role === 'ADMIN' && <NavItem href="/professor" icon={GraduationCap} label="Professor" />}
       </div>
 
       {/* Bottom: stats + logout (desktop) */}

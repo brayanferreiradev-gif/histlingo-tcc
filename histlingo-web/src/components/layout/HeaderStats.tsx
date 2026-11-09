@@ -1,4 +1,5 @@
 import { Flame, Star, Volume2, VolumeX } from "lucide-react"
+import { PixelMedal } from "../PixelMedal"
 import { useEffect, useState } from "react"
 import { isMuted, onMuteChange, setMuted, sfx } from "../../lib/sfx"
 import { useAuth } from "../../lib/AuthContext"
@@ -6,11 +7,11 @@ import { Link } from "wouter"
 import { Avatar } from "../Avatar"
 
 function getLeague(xp: number): { icon: string; label: string; color: string } {
-  if (xp >= 10000) return { icon: '👑', label: 'Mestre', color: 'text-[#5B4A94]' }
-  if (xp >= 5000) return { icon: '💎', label: 'Diamante', color: 'text-[#2A6A86]' }
-  if (xp >= 2000) return { icon: '🥇', label: 'Ouro', color: 'text-[#8A6417]' }
-  if (xp >= 500) return { icon: '🥈', label: 'Prata', color: 'text-(--color-mute)' }
-  return { icon: '🥉', label: 'Bronze', color: 'text-[#8E5320]' }
+  if (xp >= 10000) return { icon: 'Mestre', label: 'Mestre', color: 'text-[#5B4A94]' }
+  if (xp >= 5000) return { icon: 'Diamante', label: 'Diamante', color: 'text-[#2A6A86]' }
+  if (xp >= 2000) return { icon: 'Ouro', label: 'Ouro', color: 'text-[#8A6417]' }
+  if (xp >= 500) return { icon: 'Prata', label: 'Prata', color: 'text-(--color-mute)' }
+  return { icon: 'Bronze', label: 'Bronze', color: 'text-[#8E5320]' }
 }
 
 export function HeaderStats() {
@@ -47,7 +48,7 @@ export function HeaderStats() {
 
       {/* League */}
       <Link href="/leaderboard" className="hidden sm:flex items-center gap-1.5 bg-(--color-paper) border-[3px] border-(--color-night) shadow-[2px_2px_0_#0F2226] px-2.5 py-1 rounded-full transition-all">
-        <span className="text-lg leading-none">{league.icon}</span>
+        <PixelMedal league={league.icon} size={22} />
         <span className={`font-black text-sm leading-none hidden sm:block ${league.color}`}>{league.label}</span>
       </Link>
 

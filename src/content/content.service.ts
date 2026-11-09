@@ -11,6 +11,7 @@ export class ContentService implements OnModuleInit {
     let pool: Pool | null = null;
     try {
       pool = createPool(this.mysqlConfig());
+      await this.ensureOwnerColumn(pool);
       const [rows] = await pool.query('SELECT COUNT(*) as cnt FROM lessons') as any[];
       const count = Number(rows[0].cnt);
       if (count < 30) await this.seedContent(pool);
@@ -18,6 +19,15 @@ export class ContentService implements OnModuleInit {
       console.error('[Seed] Failed (non-fatal):', err instanceof Error ? err.message : String(err));
     } finally {
       if (pool) await pool.end().catch(() => {});
+    }
+  }
+
+  /** Migração leve: guarda quem criou cada matéria (professor). */
+  private async ensureOwnerColumn(pool: Pool) {
+    const [cols] = await pool.query("SHOW COLUMNS FROM modules LIKE 'owner_id'") as any[];
+    if (!(cols as any[]).length) {
+      await pool.query('ALTER TABLE modules ADD COLUMN owner_id VARCHAR(36) NULL');
+      console.log('[Migrate] modules.owner_id criado');
     }
   }
 
@@ -425,7 +435,7 @@ export class ContentService implements OnModuleInit {
 
   async getModules() {
     const rows = await this.prisma.query(`
-      SELECT m.id as moduleId, m.title as moduleTitle, m.description as moduleDescription, m.\`order\` as moduleOrder,
+      SELECT m.id as moduleId, m.owner_id as ownerId, m.title as moduleTitle, m.description as moduleDescription, m.\`order\` as moduleOrder,
              l.id as lessonId, l.title as lessonTitle, l.content as lessonContent,
              l.xp_reward as lessonXpReward, l.\`order\` as lessonOrder, l.module_id as lessonModuleId
       FROM modules m
@@ -437,7 +447,7 @@ export class ContentService implements OnModuleInit {
       if (!moduleMap.has(row.moduleId)) {
         moduleMap.set(row.moduleId, {
           id: row.moduleId, title: row.moduleTitle, description: row.moduleDescription,
-          order: row.moduleOrder, lessons: [],
+          order: row.moduleOrder, ownerId: row.ownerId ?? null, lessons: [],
         });
       }
       if (row.lessonId) {

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { PixelMedal } from "../PixelMedal"
 import { Link } from "wouter"
 import { Flame, Star, Trophy } from "lucide-react"
 import { users, LeaderboardEntry } from "../../lib/api"
@@ -13,9 +14,6 @@ function getLeague(xp: number): string {
   return 'Bronze'
 }
 
-const LEAGUE_ICONS: Record<string, string> = {
-  'Bronze': '🥉', 'Prata': '🥈', 'Ouro': '🥇', 'Diamante': '💎', 'Mestre': '👑',
-}
 
 export function RightPanel() {
   const { user } = useAuth()
@@ -42,7 +40,7 @@ export function RightPanel() {
           <Avatar value={user.avatarEmoji} size={52} />
           <div className="flex-1 min-w-0">
             <p className="font-black truncate">{user.username}</p>
-            <p className="text-xs text-gray-400 font-bold">Nível {user.level} · {LEAGUE_ICONS[league]} {league}</p>
+            <p className="text-xs text-gray-400 font-bold">Nível {user.level} · <PixelMedal league={league} size={14} className="mx-0.5" /> {league}</p>
           </div>
         </div>
 
@@ -66,8 +64,8 @@ export function RightPanel() {
         {nextXP !== Infinity && (
           <>
             <div className="flex justify-between text-xs font-bold text-gray-500 mb-1.5">
-              <span>{LEAGUE_ICONS[league]} {league}</span>
-              <span>{LEAGUE_ICONS[nextName[league]]} {nextName[league]}</span>
+              <span><PixelMedal league={league} size={14} className="mr-1" />{league}</span>
+              <span><PixelMedal league={nextName[league]} size={14} className="mr-1" />{nextName[league]}</span>
             </div>
             <div className="h-3 bg-(--color-chart) rounded-full border-2 border-(--color-night) overflow-hidden">
               <div className="h-full bg-(--color-secondary) rounded-full" style={{ width: `${progress}%` }} />
@@ -93,10 +91,9 @@ export function RightPanel() {
           )}
           {top5.map((entry, i) => {
             const isMe = entry.id === user.id
-            const medals = ['🥇', '🥈', '🥉']
-            return (
+                        return (
               <div key={entry.id} className={`flex items-center gap-2.5 px-2 py-2 rounded-2xl ${isMe ? 'bg-(--color-secondary) border-2 border-(--color-night)' : ''}`}>
-                <span className="text-base w-6 text-center shrink-0">{i < 3 ? medals[i] : `${i + 1}`}</span>
+                <span className="text-base w-6 text-center shrink-0">{i < 3 ? <PixelMedal rank={(i + 1) as 1 | 2 | 3} size={22} /> : `${i + 1}`}</span>
                 <Avatar value={entry.avatarEmoji} size={32} />
                 <div className="flex-1 min-w-0">
                   <p className={`font-black text-xs truncate ${'text-(--color-night)'}`}>

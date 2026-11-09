@@ -10,6 +10,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/leaderboard': 'Ligas',
   '/profile': 'Perfil',
   '/wiki': 'Wiki',
+  '/professor': 'Professor',
 }
 
 export function AppLayout({ children }: { children: ReactNode }) {

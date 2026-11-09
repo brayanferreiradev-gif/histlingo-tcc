@@ -21,11 +21,23 @@ export class AuthService {
     );
     if (existing) throw new ConflictException('Email ou nome de usuário já em uso.');
 
+    // Cadastro de professor: exige o código de acesso (TEACHER_CODE no servidor).
+    let role = 'STUDENT';
+    if (dto.teacherCode) {
+      const expected = process.env.TEACHER_CODE || 'professor-histlingo';
+      const a = Buffer.from(dto.teacherCode);
+      const b = Buffer.from(expected);
+      if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+        throw new BadRequestException('Código de professor inválido.');
+      }
+      role = 'ADMIN';
+    }
+
     const hashed = await bcrypt.hash(dto.password, 10);
     const id = crypto.randomUUID();
     await this.db.run(
-      'INSERT INTO users (id, username, email, password, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())',
-      [id, dto.username, dto.email, hashed]
+      'INSERT INTO users (id, username, email, password, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())',
+      [id, dto.username, dto.email, hashed, role]
     );
     return this.signToken(id, dto.email);
   }
