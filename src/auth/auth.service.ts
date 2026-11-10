@@ -76,7 +76,7 @@ export class AuthService {
       [token, expires, user.id]
     );
 
-    const baseUrl = process.env.FRONTEND_URL || 'https://goldenrod-whale-887048.hostingersite.com';
+    const baseUrl = process.env.FRONTEND_URL || 'https://histlingo.com.br';
     const resetUrl = `${baseUrl}/reset-password?token=${token}`;
     await this.sendResetEmail(user.email, user.username, resetUrl);
     return { message: 'Se o email existir, você receberá as instruções em breve.' };
